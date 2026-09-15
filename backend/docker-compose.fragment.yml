@@ -1,0 +1,50 @@
+# Fragment for the root infra/docker-compose.yml. Copy the `leads-api` service and the
+# `leadforge-data` volume into that file; the build context is relative to it.
+#
+# The frontend talks to http://leads-api:8000/api/v1 inside the compose network and to
+# http://localhost:8000/api/v1 from the browser.
+
+services:
+  leads-api:
+    build:
+      context: ../assignment1/backend
+      dockerfile: Dockerfile
+    image: ak-project-leadforge-api:latest
+    container_name: leads-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # Swap to `modal` once the VLM endpoint is deployed; `stub` keeps the stack runnable
+      # with no GPU and no network.
+      VLM_PROVIDER: ${VLM_PROVIDER:-stub}
+      VLM_BASE_URL: ${VLM_BASE_URL:-}
+      VLM_MODEL: ${VLM_MODEL:-Qwen/Qwen2.5-VL-3B-Instruct}
+      VLM_API_KEY: ${VLM_API_KEY:-}
+      MODAL_PROXY_KEY: ${MODAL_PROXY_KEY:-}
+      MODAL_PROXY_SECRET: ${MODAL_PROXY_SECRET:-}
+      VLM_CONCURRENCY: ${VLM_CONCURRENCY:-6}
+      # >=300 mandatory (cold boot measured 205-301 s); 420 leaves real margin.
+      # A compose default silently overrides the application default, so this is
+      # the number that actually takes effect.
+      VLM_TIMEOUT_S: ${VLM_TIMEOUT_S:-420}
+      VLM_COLD_TIMEOUT_S: ${VLM_COLD_TIMEOUT_S:-420}
+      CONFIDENCE_THRESHOLD: ${CONFIDENCE_THRESHOLD:-0.65}
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+      DATA_DIR: /data
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      - leadforge-data:/data
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import sys,urllib.request; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4).status == 200 else 1)"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  leadforge-data:

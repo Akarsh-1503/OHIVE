@@ -1,0 +1,17 @@
+.venv/
+data/
+tests/
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.ruff_cache/
+.env
+.env.*
+!.env.example
+*.xlsx
+*.csv
+.DS_Store
+Makefile
+docker-compose.fragment.yml
