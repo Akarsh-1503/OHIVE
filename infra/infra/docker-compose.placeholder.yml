@@ -1,0 +1,44 @@
+# Throwaway upstreams used to prove the public path end-to-end before the real
+# apps exist, and to re-verify it later without a full deploy.
+#
+# These containers take the network ALIASES the real services use, so the live
+# Caddyfile is exercised completely unmodified — same hostnames, same routes,
+# same certificates. Nothing about the proof is a special case.
+#
+#   docker compose -f docker-compose.placeholder.yml up -d
+#   curl -sSI https://leads-<dashed-ip>.nip.io
+#   docker compose -f docker-compose.placeholder.yml down
+#
+# Requires the ak-project-net network to already exist (i.e. caddy is running).
+
+name: ak-project-placeholder
+
+networks:
+  ak-project-net:
+    external: true
+
+x-placeholder: &placeholder
+  image: nginx:alpine
+  restart: "no"
+  # 3000 stands in for the Next.js tier, 8000 for the FastAPI tier.
+  command:
+    - sh
+    - -c
+    - |
+      printf '%s' 'server { listen 3000; listen 8000; location / { default_type text/plain; return 200 "ak-project placeholder ok"; } }' > /etc/nginx/conf.d/default.conf
+      exec nginx -g 'daemon off;'
+
+services:
+  leads-placeholder:
+    <<: *placeholder
+    container_name: ak-project-placeholder-leads
+    networks:
+      ak-project-net:
+        aliases: [leads-web, leads-api]
+
+  slam-placeholder:
+    <<: *placeholder
+    container_name: ak-project-placeholder-slam
+    networks:
+      ak-project-net:
+        aliases: [slam-web, slam-api]
