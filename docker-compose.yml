@@ -1,0 +1,119 @@
+# LeadForge — standalone developer stack.
+#
+#   docker compose up --build     ->  http://localhost:3000
+#
+# This file is for running LeadForge on its own machine: it BUILDS both images from source
+# and publishes them on localhost. It is deliberately not the deployment stack — the live
+# host runs `infra/docker-compose.yml` at the repository root, which puts both assignments
+# behind one Caddy reverse proxy with Let's Encrypt TLS and consumes pre-built images. The
+# two files do not overlap: this one owns "how do I build and run it", that one owns
+# "how is it served publicly".
+#
+# Defaults are chosen so that a clean clone with no .env and no credentials works:
+# VLM_PROVIDER=stub is a deterministic offline fake, so there is no GPU and no API key in
+# the loop. To point at the real Qwen2.5-VL endpoint, see the commented block below.
+
+name: leadforge
+
+services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: leadforge-api:dev
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-8000}:8000"
+    environment:
+      # ---- offline by default -------------------------------------------------------
+      # `stub` synthesises a deterministic lead from each filename: no GPU, no network,
+      # no key. Filenames steer the outcome, so the demo corpus exercises every branch —
+      # `...fail...` fails, `...dup...` collides, `...blur...` lands in the review queue.
+      VLM_PROVIDER: ${VLM_PROVIDER:-stub}
+      #
+      # ---- real model ---------------------------------------------------------------
+      # Do not put values in this file. Set them in a local .env (git-ignored):
+      #
+      #   VLM_PROVIDER=modal
+      #   VLM_BASE_URL=https://<your-modal-workspace>--ak-project-vlm-serve.modal.run/v1
+      #   VLM_API_KEY=<the bearer key from the ak-project-vlm-auth Modal secret>
+      #
+      # See assignment1/infra/modal/README.md for how that endpoint is deployed.
+      VLM_BASE_URL: ${VLM_BASE_URL:-}
+      VLM_MODEL: ${VLM_MODEL:-Qwen/Qwen2.5-VL-3B-Instruct}
+      VLM_API_KEY: ${VLM_API_KEY:-}
+      VLM_CONCURRENCY: ${VLM_CONCURRENCY:-6}
+      # >= 300 is mandatory against the real endpoint: the GPU scales to zero and a cold
+      # boot measures 187-237 s, so a shorter timeout fails every first request.
+      VLM_TIMEOUT_S: ${VLM_TIMEOUT_S:-420}
+      VLM_COLD_TIMEOUT_S: ${VLM_COLD_TIMEOUT_S:-420}
+
+      DATA_DIR: /data
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # The browser calls the API cross-origin on localhost (:3000 -> :8000), so the dev
+      # stack has to allow it. Behind the production reverse proxy both are same-origin.
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+      CONFIDENCE_THRESHOLD: ${CONFIDENCE_THRESHOLD:-0.65}
+      DUPLICATE_FUZZY_THRESHOLD: ${DUPLICATE_FUZZY_THRESHOLD:-90}
+      MAX_FILES_PER_BATCH: ${MAX_FILES_PER_BATCH:-25}
+      MAX_FILE_MB: ${MAX_FILE_MB:-12}
+      DEFAULT_PHONE_REGION: ${DEFAULT_PHONE_REGION:-US}
+    volumes:
+      # SQLite database + the uploaded card images. A named volume rather than a bind mount
+      # on purpose: the image runs as the unprivileged uid 10001 it creates at build time,
+      # and a named volume inherits that ownership from the image on every platform. A
+      # ./data bind mount does not — it takes the host's ownership, so on Linux the
+      # container cannot write to it, and Docker Desktop refuses to share some host paths
+      # at all (verified: a repo under ~/Desktop fails with `operation not permitted`).
+      # The volume survives `docker compose down`; `down -v` is what deletes it.
+      #
+      # If you do want the database and the card images visible on the host, create ./data,
+      # swap the line below for `- ./data:/data`, and on Linux add
+      # `user: "${LEADFORGE_UID}:${LEADFORGE_GID}"` to this service and start it with
+      # `make up`, which exports both from `id -u` / `id -g`.
+      - leadforge-data:/data
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import sys,urllib.request; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4).status == 200 else 1)"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # NEXT_PUBLIC_* is inlined into the client bundle at build time, so it must be the
+        # URL the *browser* will use — not the compose-internal hostname. Change API_PORT
+        # and this follows it.
+        NEXT_PUBLIC_API_BASE: ${NEXT_PUBLIC_API_BASE:-http://localhost:${API_PORT:-8000}/api/v1}
+        NEXT_PUBLIC_MOCK: ${NEXT_PUBLIC_MOCK:-0}
+    image: leadforge-web:dev
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "require('http').get('http://127.0.0.1:3000/',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  leadforge-data:
