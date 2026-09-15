@@ -70,6 +70,10 @@ export function ViewerOverlay({
     runtime.frameEl = frameRef.current;
     runtime.fpsEl = fpsRef.current;
     runtime.onPlayStateChange = setPlaying;
+    // Adopt whatever the runtime is already doing. The intro replay is started by the
+    // viewer's mount effect, whose ordering against this one is not guaranteed, so the
+    // button would otherwise read "Replay" while the clip was already playing.
+    setPlaying(runtime.playing);
     return () => {
       runtime.scrubberEl = null;
       runtime.timeEl = null;

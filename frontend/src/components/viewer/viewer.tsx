@@ -26,11 +26,24 @@ export function Viewer({
   const containerRef = useRef<HTMLDivElement>(null);
   const [settings, setSettings] = useState<ViewerSettings>(DEFAULT_SETTINGS);
 
-  // Start the playhead at the end of the clip so the completed map is shown in full.
+  // Replay the reconstruction once when a finished map first appears: rewind to the start
+  // and play. Watching the trajectory and cloud build themselves is what makes the result
+  // legible -- landing on a static finished scene reads as a still image, and the Replay
+  // control is easy to miss. `autoplay` is one-shot per job; the driver clears `playing`
+  // when it reaches the end, leaving the completed map on screen.
+  //
+  // With reduced motion, skip straight to the finished state rather than animating.
   useEffect(() => {
-    runtime.frame = data.poseCount - 1;
+    if (reduced) {
+      runtime.frame = data.poseCount - 1;
+      runtime.playing = false;
+    } else {
+      runtime.frame = 0;
+      runtime.playing = true;
+      runtime.onPlayStateChange?.(true);
+    }
     runtime.invalidate?.();
-  }, [data, runtime]);
+  }, [data, runtime, reduced]);
 
   const r = data.bounds.radius;
 

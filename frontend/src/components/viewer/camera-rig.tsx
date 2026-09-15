@@ -234,6 +234,14 @@ export function PlaybackDriver({ data, runtime }: { data: SceneData; runtime: Vi
 
   useEffect(() => {
     runtime.invalidate = invalidate;
+    // Draw once now that a renderer exists. The parent sets the playhead on mount, but it
+    // runs before this component -- a child of <Canvas> -- has published `invalidate`, so
+    // its own request no-ops. Under frameloop="demand" nothing then rendered until the user
+    // happened to interact, leaving an empty scene and a scrubber stuck at "1/288".
+    //
+    // This also starts the intro replay: `useFrame` re-invalidates itself for as long as
+    // `runtime.playing` is set, so one kick is enough to run the whole animation.
+    invalidate();
     return () => {
       runtime.invalidate = null;
     };
