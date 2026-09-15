@@ -1,0 +1,1102 @@
+{
+  "cards_in_ground_truth": 20,
+  "cards_matched": 20,
+  "missing_predictions": [],
+  "fields": {
+    "first_name": {
+      "support": 20,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "tp": 20,
+      "fp": 0,
+      "fn": 0,
+      "tn": 0
+    },
+    "last_name": {
+      "support": 20,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "tp": 20,
+      "fp": 0,
+      "fn": 0,
+      "tn": 0
+    },
+    "job_title": {
+      "support": 19,
+      "precision": 0.8421052631578947,
+      "recall": 0.8421052631578947,
+      "f1": 0.8421052631578947,
+      "accuracy": 0.85,
+      "tp": 16,
+      "fp": 3,
+      "fn": 3,
+      "tn": 1
+    },
+    "company": {
+      "support": 19,
+      "precision": 0.9473684210526315,
+      "recall": 0.9473684210526315,
+      "f1": 0.9473684210526315,
+      "accuracy": 0.95,
+      "tp": 18,
+      "fp": 1,
+      "fn": 1,
+      "tn": 1
+    },
+    "location": {
+      "support": 19,
+      "precision": 0.7894736842105263,
+      "recall": 0.7894736842105263,
+      "f1": 0.7894736842105263,
+      "accuracy": 0.8,
+      "tp": 15,
+      "fp": 4,
+      "fn": 4,
+      "tn": 1
+    },
+    "phone": {
+      "support": 19,
+      "precision": 0.8421052631578947,
+      "recall": 0.8421052631578947,
+      "f1": 0.8421052631578947,
+      "accuracy": 0.85,
+      "tp": 16,
+      "fp": 3,
+      "fn": 3,
+      "tn": 1
+    },
+    "email": {
+      "support": 19,
+      "precision": 0.8421052631578947,
+      "recall": 0.8421052631578947,
+      "f1": 0.8421052631578947,
+      "accuracy": 0.85,
+      "tp": 16,
+      "fp": 3,
+      "fn": 3,
+      "tn": 1
+    },
+    "website": {
+      "support": 19,
+      "precision": 0.9444444444444444,
+      "recall": 0.8947368421052632,
+      "f1": 0.918918918918919,
+      "accuracy": 0.9,
+      "tp": 17,
+      "fp": 1,
+      "fn": 2,
+      "tn": 1
+    }
+  },
+  "overall": {
+    "micro_precision": 0.9019607843137255,
+    "micro_recall": 0.8961038961038961,
+    "micro_f1": 0.8990228013029317,
+    "macro_f1": 0.8977596017069701,
+    "field_accuracy": 0.9,
+    "exact_card_rate": 0.7
+  },
+  "by_difficulty": {
+    "clean": {
+      "cards": 1,
+      "field_accuracy": 1.0,
+      "exact_card_rate": 1.0
+    },
+    "degraded": {
+      "cards": 12,
+      "field_accuracy": 0.8333333333333334,
+      "exact_card_rate": 0.5
+    },
+    "edge": {
+      "cards": 7,
+      "field_accuracy": 1.0,
+      "exact_card_rate": 1.0
+    }
+  },
+  "per_card": [
+    {
+      "filename": "card_01_left_align_clean.png",
+      "difficulty": "clean",
+      "fields": {
+        "first_name": {
+          "expected": "Aarav",
+          "predicted": "Aarav",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Deshmukh",
+          "predicted": "Deshmukh",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Head of Platform Engineering",
+          "predicted": "Head of Platform Engineering",
+          "outcome": "tp"
+        },
+        "company": {
+          "expected": "Northwind Robotics",
+          "predicted": "NORTHWIND ROBOTICS",
+          "outcome": "tp"
+        },
+        "location": {
+          "expected": "Bengaluru, KA, India",
+          "predicted": "Bengaluru, KA, India",
+          "outcome": "tp"
+        },
+        "phone": {
+          "expected": "+91 80 4555 0118",
+          "predicted": "+91 80 4555 0118",
+          "outcome": "tp"
+        },
+        "email": {
+          "expected": "aarav.deshmukh@northwind.example",
+          "predicted": "aarav.deshmukh@northwind.example",
+          "outcome": "tp"
+        },
+        "website": {
+          "expected": "northwind.example",
+          "predicted": "northwind.example",
+          "outcome": "tp"
+        }
+      },
+      "correct": 8,
+      "scored": 8,
+      "exact": true
+    },
+    {
+      "filename": "card_02_centered_serif_clean.png",
+      "difficulty": "edge",
+      "fields": {
+        "first_name": {
+          "expected": "Marta",
+          "predicted": "Marta",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Kowalczyk-Reyes",
+          "predicted": "Kowalczyk-Reyes",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Director, Clinical Operations",
+          "predicted": "DIRECTOR, CLINICAL OPERATIONS",
+          "outcome": "tp"
+        },
+        "company": {
+          "expected": "Helix Meridian Labs",
+          "predicted": "Helix Meridian Labs",
+          "outcome": "tp"
+        },
+        "location": {
+          "expected": "Boston, MA, USA",
+          "predicted": "Boston, MA, USA",
+          "outcome": "tp"
+        },
+        "phone": {
+          "expected": "+1 (617) 555 0142",
+          "predicted": "+1 (617) 555 0142",
+          "outcome": "tp"
+        },
+        "email": {
+          "expected": "m.kowalczyk-reyes@helixmeridian.example",
+          "predicted": "m.kowalczyk-reyes@helixmeridian.example",
+          "outcome": "tp"
+        },
+        "website": {
+          "expected": "helixmeridian.example",
+          "predicted": "helixmeridian.example",
+          "outcome": "tp"
+        }
+      },
+      "correct": 8,
+      "scored": 8,
+      "exact": true
+    },
+    {
+      "filename": "card_03_dark_panel_clean.png",
+      "difficulty": "edge",
+      "fields": {
+        "first_name": {
+          "expected": "Yusuf",
+          "predicted": "Yusuf",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Al-Hakim",
+          "predicted": "Al-Hakim",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Chief Scientific Officer",
+          "predicted": "Chief Scientific Officer",
+          "outcome": "tp"
+        },
+        "company": {
+          "expected": "Qanat Desalination Group",
+          "predicted": "Qanat Desalination Group",
+          "outcome": "tp"
+        },
+        "location": {
+          "expected": "Dubai, United Arab Emirates",
+          "predicted": "Dubai, United Arab Emirates",
+          "outcome": "tp"
+        },
+        "phone": {
+          "expected": "+971 4 555 0173",
+          "predicted": "+971 4 555 0173",
+          "outcome": "tp"
+        },
+        "email": {
+          "expected": "y.alhakim@qanatgroup.example",
+          "predicted": "y.alhakim@qanatgroup.example",
+          "outcome": "tp"
+        },
+        "website": {
+          "expected": "qanatgroup.example",
+          "predicted": "qanatgroup.example",
+          "outcome": "tp"
+        }
+      },
+      "correct": 8,
+      "scored": 8,
+      "exact": true
+    },
+    {
+      "filename": "card_04_minimal_clean.webp",
+      "difficulty": "edge",
+      "fields": {
+        "first_name": {
+          "expected": "Sophie",
+          "predicted": "Sophie",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Brennan",
+          "predicted": "Brennan",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": null,
+          "predicted": null,
+          "outcome": "tn"
+        },
+        "company": {
+          "expected": null,
+          "predicted": null,
+          "outcome": "tn"
+        },
+        "location": {
+          "expected": null,
+          "predicted": null,
+          "outcome": "tn"
+        },
+        "phone": {
+          "expected": null,
+          "predicted": null,
+          "outcome": "tn"
+        },
+        "email": {
+          "expected": "sophie@larkfield.example",
+          "predicted": "sophie@larkfield.example",
+          "outcome": "tp"
+        },
+        "website": {
+          "expected": null,
+          "predicted": null,
+          "outcome": "tn"
+        }
+      },
+      "correct": 8,
+      "scored": 8,
+      "exact": true
+    },
+    {
+      "filename": "card_05_bilingual_jp_clean.png",
+      "difficulty": "edge",
+      "fields": {
+        "first_name": {
+          "expected": "Kenji",
+          "predicted": "Kenji",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Watanabe",
+          "predicted": "Watanabe",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Senior Solutions Architect",
+          "predicted": "Senior Solutions Architect",
+          "outcome": "tp"
+        },
+        "company": {
+          "expected": "Tsubaki Mobility K.K.",
+          "predicted": "Tsubaki Mobility K.K.",
+          "outcome": "tp"
+        },
+        "location": {
+          "expected": "Minato-ku, Tokyo, Japan",
+          "predicted": "Minato-ku, Tokyo, Japan",
+          "outcome": "tp"
+        },
+        "phone": {
+          "expected": "+81 3 5555 0164",
+          "predicted": "+81 3 5555 0164",
+          "outcome": "tp"
+        },
+        "email": {
+          "expected": "k.watanabe@tsubaki-mobility.example",
+          "predicted": "k.watanabe@tsubaki-mobility.example",
+          "outcome": "tp"
+        },
+        "website": {
+          "expected": "tsubaki-mobility.example",
+          "predicted": "tsubaki-mobility.example",
+          "outcome": "tp"
+        }
+      },
+      "correct": 8,
+      "scored": 8,
+      "exact": true
+    },
+    {
+      "filename": "card_06_title_wrap_clean.png",
+      "difficulty": "edge",
+      "fields": {
+        "first_name": {
+          "expected": "Lena",
+          "predicted": "Lena",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Hoffmann",
+          "predicted": "Hoffmann",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Vice President, Industrial Automation & Digital Manufacturing Systems",
+          "predicted": "Vice President, Industrial Automation & Digital Manufacturing Systems",
+          "outcome": "tp"
+        },
+        "company": {
+          "expected": "Rheinwerk Systeme GmbH",
+          "predicted": "RHEINWERK SYSTEME GMBH",
+          "outcome": "tp"
+        },
+        "location": {
+          "expected": "Stuttgart, Germany",
+          "predicted": "Stuttgart, Germany",
+          "outcome": "tp"
+        },
+        "phone": {
+          "expected": "+49 711 5550 0129",
+          "predicted": "+49 711 5550 0129",
+          "outcome": "tp"
+        },
+        "email": {
+          "expected": "l.hoffmann@rheinwerk.example",
+          "predicted": "l.hoffmann@rheinwerk.example",
+          "outcome": "tp"
+        },
+        "website": {
+          "expected": "rheinwerk.example",
+          "predicted": "rheinwerk.example",
+          "outcome": "tp"
+        }
+      },
+      "correct": 8,
+      "scored": 8,
+      "exact": true
+    },
+    {
+      "filename": "card_07_two_phones_clean.png",
+      "difficulty": "edge",
+      "fields": {
+        "first_name": {
+          "expected": "Wei Ming",
+          "predicted": "Wei Ming",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Tan",
+          "predicted": "Tan",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Regional Partnerships Lead",
+          "predicted": "REGIONAL PARTNERSHIPS LEAD",
+          "outcome": "tp"
+        },
+        "company": {
+          "expected": "Kallang Harbour Capital",
+          "predicted": "KALLANG HARBOUR CAPITAL",
+          "outcome": "tp"
+        },
+        "location": {
+          "expected": "Singapore",
+          "predicted": "Singapore",
+          "outcome": "tp"
+        },
+        "phone": {
+          "expected": "+65 8555 0132",
+          "predicted": "+65 8555 0132",
+          "outcome": "tp"
+        },
+        "email": {
+          "expected": "weiming.tan@kallangharbour.example",
+          "predicted": "weiming.tan@kallangharbour.example",
+          "outcome": "tp"
+        },
+        "website": {
+          "expected": "kallangharbour.example",
+          "predicted": "kallangharbour.example",
+          "outcome": "tp"
+        }
+      },
+      "correct": 8,
+      "scored": 8,
+      "exact": true
+    },
+    {
+      "filename": "card_08_no_email_clean.png",
+      "difficulty": "edge",
+      "fields": {
+        "first_name": {
+          "expected": "Ravi",
+          "predicted": "Ravi",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Iyer",
+          "predicted": "Iyer",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Field Service Manager",
+          "predicted": "Field Service Manager",
+          "outcome": "tp"
+        },
+        "company": {
+          "expected": "Sundara Instruments Pvt Ltd",
+          "predicted": "SUNDARA INSTRUMENTS PVT LTD",
+          "outcome": "tp"
+        },
+        "location": {
+          "expected": "Pune, MH, India",
+          "predicted": "Pune, MH, India",
+          "outcome": "tp"
+        },
+        "phone": {
+          "expected": "+91 20 4555 0166",
+          "predicted": "+91 20 4555 0166",
+          "outcome": "tp"
+        },
+        "email": {
+          "expected": null,
+          "predicted": null,
+          "outcome": "tn"
+        },
+        "website": {
+          "expected": "sundarainstruments.example",
+          "predicted": "sundarainstruments.example",
+          "outcome": "tp"
+        }
+      },
+      "correct": 8,
+      "scored": 8,
+      "exact": true
+    },
+    {
+      "filename": "card_09_portrait_warp.jpg",
+      "difficulty": "degraded",
+      "fields": {
+        "first_name": {
+          "expected": "Nadia",
+          "predicted": "Nadia",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Farouk",
+          "predicted": "Farouk",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Head of Brand",
+          "predicted": "Head of Brand",
+          "outcome": "tp"
+        },
+        "company": {
+          "expected": "Caravelle Studio",
+          "predicted": "Caravelle Studio",
+          "outcome": "tp"
+        },
+        "location": {
+          "expected": "London, United Kingdom",
+          "predicted": "London, United Kingdom",
+          "outcome": "tp"
+        },
+        "phone": {
+          "expected": "+44 20 7946 0132",
+          "predicted": "+44 20 7946 0132",
+          "outcome": "tp"
+        },
+        "email": {
+          "expected": "nadia@caravellestudio.example",
+          "predicted": "nadia@caravellestudio.example",
+          "outcome": "tp"
+        },
+        "website": {
+          "expected": "caravellestudio.example",
+          "predicted": "caravellestudio.example",
+          "outcome": "tp"
+        }
+      },
+      "correct": 8,
+      "scored": 8,
+      "exact": true
+    },
+    {
+      "filename": "card_10_qr_lowlight.jpg",
+      "difficulty": "degraded",
+      "fields": {
+        "first_name": {
+          "expected": "Elena",
+          "predicted": "Elena",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Vasquez",
+          "predicted": "Vasquez",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Managing Partner",
+          "predicted": "Managing Partner",
+          "outcome": "tp"
+        },
+        "company": {
+          "expected": "Tidewater Advisory",
+          "predicted": "TIDewater ADVISORY",
+          "outcome": "tp"
+        },
+        "location": {
+          "expected": "San Francisco, CA, USA",
+          "predicted": "San Francisco, CA, USA",
+          "outcome": "tp"
+        },
+        "phone": {
+          "expected": "+1 (415) 555 0188",
+          "predicted": "+1 (415) 555 0188",
+          "outcome": "tp"
+        },
+        "email": {
+          "expected": "elena.vasquez@tidewater.example",
+          "predicted": "elena.vasquez@tidewater.example",
+          "outcome": "tp"
+        },
+        "website": {
+          "expected": "tidewater.example",
+          "predicted": "tidewater.example",
+          "outcome": "tp"
+        }
+      },
+      "correct": 8,
+      "scored": 8,
+      "exact": true
+    },
+    {
+      "filename": "card_11_multiline_addr_blur.jpg",
+      "difficulty": "degraded",
+      "fields": {
+        "first_name": {
+          "expected": "Ingrid",
+          "predicted": "Ingrid",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Lindqvist",
+          "predicted": "Lindqvist",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Global Logistics Coordinator",
+          "predicted": "Head of Logistics Communication",
+          "outcome": "wrong"
+        },
+        "company": {
+          "expected": "Meridian Freight Alliance",
+          "predicted": "Meridian Freight Alliance",
+          "outcome": "tp"
+        },
+        "location": {
+          "expected": "Hamburg, Germany",
+          "predicted": "Ratingen, NRW, Germany",
+          "outcome": "wrong"
+        },
+        "phone": {
+          "expected": "+49 40 5550 0147",
+          "predicted": "+49-40",
+          "outcome": "wrong"
+        },
+        "email": {
+          "expected": "i.lindqvist@meridianfreight.example",
+          "predicted": "l.lindqvist@meridianfreight.example",
+          "outcome": "wrong"
+        },
+        "website": {
+          "expected": "meridianfreight.example",
+          "predicted": "meridianfreight.example",
+          "outcome": "tp"
+        }
+      },
+      "correct": 4,
+      "scored": 8,
+      "exact": false
+    },
+    {
+      "filename": "card_12_suffix_jpeg.jpg",
+      "difficulty": "degraded",
+      "fields": {
+        "first_name": {
+          "expected": "James",
+          "predicted": "James",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Okonkwo",
+          "predicted": "Okonkwo",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Account Executive",
+          "predicted": "ACCOUNT EXECUTIVE",
+          "outcome": "tp"
+        },
+        "company": {
+          "expected": "BrightSpar Analytics",
+          "predicted": "BrightSpar Analytics",
+          "outcome": "tp"
+        },
+        "location": {
+          "expected": "Austin, TX, USA",
+          "predicted": "Austin, TX, USA",
+          "outcome": "tp"
+        },
+        "phone": {
+          "expected": "+1 (512) 555 0109",
+          "predicted": "+1 (512) 555 0109",
+          "outcome": "tp"
+        },
+        "email": {
+          "expected": "j.okonkwo@brightspar.example",
+          "predicted": "j.okonkwo@brightspar.example",
+          "outcome": "tp"
+        },
+        "website": {
+          "expected": "brightspar.example",
+          "predicted": "brightspar.example",
+          "outcome": "tp"
+        }
+      },
+      "correct": 8,
+      "scored": 8,
+      "exact": true
+    },
+    {
+      "filename": "card_13_dense_skew_shadow.jpg",
+      "difficulty": "degraded",
+      "fields": {
+        "first_name": {
+          "expected": "Hannah",
+          "predicted": "Hannah",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Mbeki",
+          "predicted": "Mbeki",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Operations Director",
+          "predicted": "OPERATIONS DIRECTOR",
+          "outcome": "tp"
+        },
+        "company": {
+          "expected": "Copperleaf Foods Ltd",
+          "predicted": "COPPERLEAF FOODS LTD",
+          "outcome": "tp"
+        },
+        "location": {
+          "expected": "Manchester, United Kingdom",
+          "predicted": "Manchester, United Kingdom",
+          "outcome": "tp"
+        },
+        "phone": {
+          "expected": "+44 161 496 0155",
+          "predicted": "+44 161 496 0155",
+          "outcome": "tp"
+        },
+        "email": {
+          "expected": "h.mbeki@copperleaffoods.example",
+          "predicted": "h.mbeki@copperleaffoods.example",
+          "outcome": "tp"
+        },
+        "website": {
+          "expected": "copperleaffoods.example",
+          "predicted": "copperleaffoods.example",
+          "outcome": "tp"
+        }
+      },
+      "correct": 8,
+      "scored": 8,
+      "exact": true
+    },
+    {
+      "filename": "card_14_dup_of_02_blur.jpg",
+      "difficulty": "degraded",
+      "fields": {
+        "first_name": {
+          "expected": "Marta",
+          "predicted": "Marta",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Kowalczyk-Reyes",
+          "predicted": "Kowalczyk-Reyes",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Director, Clinical Operations",
+          "predicted": "RESEARCHER, CLINICAL OPERAATOR",
+          "outcome": "wrong"
+        },
+        "company": {
+          "expected": "Helix Meridian Labs",
+          "predicted": "Rein Medicam Labs",
+          "outcome": "wrong"
+        },
+        "location": {
+          "expected": "Boston, MA, USA",
+          "predicted": "Boston, MA, USA",
+          "outcome": "tp"
+        },
+        "phone": {
+          "expected": "+1 (617) 555 0142",
+          "predicted": "+1(617)5550002",
+          "outcome": "wrong"
+        },
+        "email": {
+          "expected": "m.kowalczyk-reyes@helixmeridian.example",
+          "predicted": "mkowalczykreyes@reinmedicam.com",
+          "outcome": "wrong"
+        },
+        "website": {
+          "expected": "helixmeridian.example",
+          "predicted": "reinmedicam.com",
+          "outcome": "wrong"
+        }
+      },
+      "correct": 3,
+      "scored": 8,
+      "exact": false
+    },
+    {
+      "filename": "card_15_dark_warp.jpg",
+      "difficulty": "degraded",
+      "fields": {
+        "first_name": {
+          "expected": "Rahul",
+          "predicted": "Rahul",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Menon",
+          "predicted": "Menon",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Director of Engineering",
+          "predicted": "Director of Engineering",
+          "outcome": "tp"
+        },
+        "company": {
+          "expected": "Vantara Aerosystems",
+          "predicted": "Vantara Aerosystems",
+          "outcome": "tp"
+        },
+        "location": {
+          "expected": "Hyderabad, TS, India",
+          "predicted": "Gachibowli Financial District, Hyderabad, TS, India",
+          "outcome": "wrong"
+        },
+        "phone": {
+          "expected": "+91 40 4555 0121",
+          "predicted": "+91 40 4555 0121",
+          "outcome": "tp"
+        },
+        "email": {
+          "expected": "rahul.menon@vantara-aero.example",
+          "predicted": "rahul.menon@vantara-aero.example",
+          "outcome": "tp"
+        },
+        "website": {
+          "expected": "vantara-aero.example",
+          "predicted": "vantara-aero.example",
+          "outcome": "tp"
+        }
+      },
+      "correct": 7,
+      "scored": 8,
+      "exact": false
+    },
+    {
+      "filename": "card_16_lowlight_grain.jpg",
+      "difficulty": "degraded",
+      "fields": {
+        "first_name": {
+          "expected": "Claire",
+          "predicted": "Claire",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Beaumont",
+          "predicted": "Beaumont",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Head of People Operations",
+          "predicted": "Head of People Operations",
+          "outcome": "tp"
+        },
+        "company": {
+          "expected": "Orrery Health",
+          "predicted": "Orrery Health",
+          "outcome": "tp"
+        },
+        "location": {
+          "expected": "Bristol, United Kingdom",
+          "predicted": "The Old Dispensary, Bristol, United Kingdom",
+          "outcome": "wrong"
+        },
+        "phone": {
+          "expected": "+44 117 496 0155",
+          "predicted": "+44 117 496 0155",
+          "outcome": "tp"
+        },
+        "email": {
+          "expected": "c.beaumont@orreryhealth.example",
+          "predicted": "c.beaumont@orreryhealth.example",
+          "outcome": "tp"
+        },
+        "website": {
+          "expected": "orreryhealth.example",
+          "predicted": "orreryhealth.example",
+          "outcome": "tp"
+        }
+      },
+      "correct": 7,
+      "scored": 8,
+      "exact": false
+    },
+    {
+      "filename": "card_17_lowres_jpeg.jpg",
+      "difficulty": "degraded",
+      "fields": {
+        "first_name": {
+          "expected": "Tobias",
+          "predicted": "Tobias",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Herrmann",
+          "predicted": "Herrmann",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Procurement Manager",
+          "predicted": "Procurement Manager",
+          "outcome": "tp"
+        },
+        "company": {
+          "expected": "Nordlicht Verpackung GmbH",
+          "predicted": "NORDLICHT VERPACKUNG GMBH",
+          "outcome": "tp"
+        },
+        "location": {
+          "expected": "Düsseldorf, Germany",
+          "predicted": "Düsseldorf, Germany",
+          "outcome": "tp"
+        },
+        "phone": {
+          "expected": "+49 211 5550 0193",
+          "predicted": "+49 211 5550 0193",
+          "outcome": "tp"
+        },
+        "email": {
+          "expected": "t.herrmann@nordlicht-vp.example",
+          "predicted": "t.herrmann@nordlicht-vp.example",
+          "outcome": "tp"
+        },
+        "website": {
+          "expected": "nordlicht-vp.example",
+          "predicted": "nordlicht-vp.example",
+          "outcome": "tp"
+        }
+      },
+      "correct": 8,
+      "scored": 8,
+      "exact": true
+    },
+    {
+      "filename": "card_18_glare_warp.jpg",
+      "difficulty": "degraded",
+      "fields": {
+        "first_name": {
+          "expected": "Aiko",
+          "predicted": "Aiko",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Nakamura",
+          "predicted": "Nakamura",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Investor Relations Manager",
+          "predicted": "Investor Relations Manager",
+          "outcome": "tp"
+        },
+        "company": {
+          "expected": "Kaiyo Marine Holdings",
+          "predicted": "KAIYO MARINE HOLDINGS",
+          "outcome": "tp"
+        },
+        "location": {
+          "expected": "Yokohama, Kanagawa, Japan",
+          "predicted": "Minatomirai, Nishi-ku Yokohama, Kanagawa, Japan",
+          "outcome": "wrong"
+        },
+        "phone": {
+          "expected": "+81 45 555 0187",
+          "predicted": "+81 45 555 0187",
+          "outcome": "tp"
+        },
+        "email": {
+          "expected": "a.nakamura@kaiyo-marine.example",
+          "predicted": "a.nakamura@kaiyo-marine.example",
+          "outcome": "tp"
+        },
+        "website": {
+          "expected": "kaiyo-marine.example",
+          "predicted": "kaiyo-marine.example",
+          "outcome": "tp"
+        }
+      },
+      "correct": 7,
+      "scored": 8,
+      "exact": false
+    },
+    {
+      "filename": "card_19_motionblur_dark.jpg",
+      "difficulty": "degraded",
+      "fields": {
+        "first_name": {
+          "expected": "Marcus",
+          "predicted": "Marcus",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Oyelaran",
+          "predicted": "Oyelaran",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Chief Revenue Officer",
+          "predicted": "VP of Logistics",
+          "outcome": "wrong"
+        },
+        "company": {
+          "expected": "Silverpine Logistics",
+          "predicted": "Silverpine Logistics",
+          "outcome": "tp"
+        },
+        "location": {
+          "expected": "Chicago, IL, USA",
+          "predicted": "Chicago, IL, USA",
+          "outcome": "tp"
+        },
+        "phone": {
+          "expected": "+1 (312) 555 0164",
+          "predicted": "+1 (312) 292-1981",
+          "outcome": "wrong"
+        },
+        "email": {
+          "expected": "m.oyelaran@silverpine.example",
+          "predicted": "moyelaran@silverpinelogistics.com",
+          "outcome": "wrong"
+        },
+        "website": {
+          "expected": "silverpine.example",
+          "predicted": null,
+          "outcome": "fn"
+        }
+      },
+      "correct": 4,
+      "scored": 8,
+      "exact": false
+    },
+    {
+      "filename": "card_20_skew_lowlight.jpg",
+      "difficulty": "degraded",
+      "fields": {
+        "first_name": {
+          "expected": "Priyanka",
+          "predicted": "Priyanka",
+          "outcome": "tp"
+        },
+        "last_name": {
+          "expected": "Sharma-Vogel",
+          "predicted": "Sharma-Vogel",
+          "outcome": "tp"
+        },
+        "job_title": {
+          "expected": "Lead UX Researcher",
+          "predicted": "Lead UX Researcher",
+          "outcome": "tp"
+        },
+        "company": {
+          "expected": "Helix Meridian Labs",
+          "predicted": "HELIX MERIDIAN LABS",
+          "outcome": "tp"
+        },
+        "location": {
+          "expected": "Berlin, Germany",
+          "predicted": "Berlin, Germany",
+          "outcome": "tp"
+        },
+        "phone": {
+          "expected": "+49 30 5550 0178",
+          "predicted": "+49 30 5550 0178",
+          "outcome": "tp"
+        },
+        "email": {
+          "expected": "p.sharma-vogel@helixmeridian.example",
+          "predicted": "p.sharma-vogel@helixmeridian.example",
+          "outcome": "tp"
+        },
+        "website": {
+          "expected": "helixmeridian.example",
+          "predicted": "helixmeridian.example",
+          "outcome": "tp"
+        }
+      },
+      "correct": 8,
+      "scored": 8,
+      "exact": true
+    }
+  ]
+}

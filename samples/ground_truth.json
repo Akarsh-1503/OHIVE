@@ -1,0 +1,863 @@
+[
+  {
+    "filename": "card_01_left_align_clean.png",
+    "difficulty": "clean",
+    "edge_cases": [],
+    "degradations": [],
+    "notes": "Baseline left-aligned card, high contrast, single phone. The control case: anything the pipeline gets wrong here is a systematic bug, not a hard input.",
+    "layout": "left_align",
+    "first_name": "Aarav",
+    "last_name": "Deshmukh",
+    "job_title": "Head of Platform Engineering",
+    "company": "Northwind Robotics",
+    "location": "Bengaluru, KA, India",
+    "phone": "+91 80 4555 0118",
+    "phone_e164": "+918045550118",
+    "email": "aarav.deshmukh@northwind.example",
+    "website": "northwind.example",
+    "printed": {
+      "name": "Aarav Deshmukh",
+      "title_lines": [
+        "Head of Platform Engineering"
+      ],
+      "company": "Northwind Robotics",
+      "address_lines": [
+        "Level 7, Ashwin Tech Park",
+        "Bengaluru, KA 560103, India"
+      ],
+      "phones": [
+        [
+          "T",
+          "+91 80 4555 0118"
+        ]
+      ],
+      "email": "aarav.deshmukh@northwind.example",
+      "website": "www.northwind.example",
+      "tagline": null,
+      "non_latin": null
+    }
+  },
+  {
+    "filename": "card_02_centered_serif_clean.png",
+    "difficulty": "edge",
+    "edge_cases": [
+      "hyphenated_surname",
+      "centred_layout"
+    ],
+    "degradations": [],
+    "notes": "Hyphenated compound surname ('Kowalczyk-Reyes') that must survive into last_name intact; centred serif layout with no left anchor for the parser.",
+    "layout": "centered",
+    "first_name": "Marta",
+    "last_name": "Kowalczyk-Reyes",
+    "job_title": "Director, Clinical Operations",
+    "company": "Helix Meridian Labs",
+    "location": "Boston, MA, USA",
+    "phone": "+1 (617) 555 0142",
+    "phone_e164": "+16175550142",
+    "email": "m.kowalczyk-reyes@helixmeridian.example",
+    "website": "helixmeridian.example",
+    "printed": {
+      "name": "Marta Kowalczyk-Reyes",
+      "title_lines": [
+        "Director, Clinical Operations"
+      ],
+      "company": "Helix Meridian Labs",
+      "address_lines": [
+        "41 Harborline Street, Suite 900",
+        "Boston, MA 02210, USA"
+      ],
+      "phones": [
+        [
+          "T",
+          "+1 (617) 555 0142"
+        ]
+      ],
+      "email": "m.kowalczyk-reyes@helixmeridian.example",
+      "website": "helixmeridian.example",
+      "tagline": null,
+      "non_latin": null
+    }
+  },
+  {
+    "filename": "card_03_dark_panel_clean.png",
+    "difficulty": "edge",
+    "edge_cases": [
+      "honorific_prefix",
+      "post_nominal",
+      "dark_card",
+      "hyphenated_surname"
+    ],
+    "degradations": [],
+    "notes": "Dark card with light text plus an honorific prefix and a post-nominal ('Dr. ... , PhD') that must not leak into first_name/last_name.",
+    "layout": "split_panel",
+    "first_name": "Yusuf",
+    "last_name": "Al-Hakim",
+    "job_title": "Chief Scientific Officer",
+    "company": "Qanat Desalination Group",
+    "location": "Dubai, United Arab Emirates",
+    "phone": "+971 4 555 0173",
+    "phone_e164": "+97145550173",
+    "email": "y.alhakim@qanatgroup.example",
+    "website": "qanatgroup.example",
+    "printed": {
+      "name": "Dr. Yusuf Al-Hakim, PhD",
+      "title_lines": [
+        "Chief Scientific Officer"
+      ],
+      "company": "Qanat Desalination Group",
+      "address_lines": [
+        "Marina Quarter, Tower 2, Level 18",
+        "Dubai, United Arab Emirates"
+      ],
+      "phones": [
+        [
+          "T",
+          "+971 4 555 0173"
+        ]
+      ],
+      "email": "y.alhakim@qanatgroup.example",
+      "website": "qanatgroup.example",
+      "tagline": null,
+      "non_latin": null
+    }
+  },
+  {
+    "filename": "card_04_minimal_clean.webp",
+    "difficulty": "edge",
+    "edge_cases": [
+      "minimal_name_email_only",
+      "mostly_null_fields"
+    ],
+    "degradations": [],
+    "notes": "Deliberately minimal: name and email only. Every other field must come back null rather than hallucinated, and quality_flags should note the gaps.",
+    "layout": "minimal",
+    "first_name": "Sophie",
+    "last_name": "Brennan",
+    "job_title": null,
+    "company": null,
+    "location": null,
+    "phone": null,
+    "phone_e164": null,
+    "email": "sophie@larkfield.example",
+    "website": null,
+    "printed": {
+      "name": "Sophie Brennan",
+      "title_lines": [],
+      "company": null,
+      "address_lines": [],
+      "phones": [],
+      "email": "sophie@larkfield.example",
+      "website": null,
+      "tagline": null,
+      "non_latin": null
+    }
+  },
+  {
+    "filename": "card_05_bilingual_jp_clean.png",
+    "difficulty": "edge",
+    "edge_cases": [
+      "bilingual_ja_en",
+      "non_latin_script"
+    ],
+    "degradations": [],
+    "notes": "Japanese/English bilingual card. The Latin block carries the ground truth; the model must not splice kanji into the Latin fields or swap the JP family-name-first ordering into first_name/last_name.",
+    "layout": "bilingual",
+    "first_name": "Kenji",
+    "last_name": "Watanabe",
+    "job_title": "Senior Solutions Architect",
+    "company": "Tsubaki Mobility K.K.",
+    "location": "Minato-ku, Tokyo, Japan",
+    "phone": "+81 3 5555 0164",
+    "phone_e164": "+81355550164",
+    "email": "k.watanabe@tsubaki-mobility.example",
+    "website": "tsubaki-mobility.example",
+    "printed": {
+      "name": "Kenji Watanabe",
+      "title_lines": [
+        "Senior Solutions Architect"
+      ],
+      "company": "Tsubaki Mobility K.K.",
+      "address_lines": [
+        "2-14-6 Akasaka, Minato-ku",
+        "Tokyo 107-0052, Japan"
+      ],
+      "phones": [
+        [
+          "T",
+          "+81 3 5555 0164"
+        ]
+      ],
+      "email": "k.watanabe@tsubaki-mobility.example",
+      "website": "tsubaki-mobility.example",
+      "tagline": null,
+      "non_latin": {
+        "name": "渡辺 健二",
+        "title": "シニアソリューションアーキテクト",
+        "company": "椿モビリティ株式会社",
+        "addr1": "東京都港区赤坂2-14-6",
+        "addr2": "電話：03-5555-0164"
+      }
+    }
+  },
+  {
+    "filename": "card_06_title_wrap_clean.png",
+    "difficulty": "edge",
+    "edge_cases": [
+      "job_title_wraps_two_lines"
+    ],
+    "degradations": [],
+    "notes": "Job title is too long for one line and wraps across two; the extracted job_title must be the rejoined single-space string, not just line one.",
+    "layout": "logo_block",
+    "first_name": "Lena",
+    "last_name": "Hoffmann",
+    "job_title": "Vice President, Industrial Automation & Digital Manufacturing Systems",
+    "company": "Rheinwerk Systeme GmbH",
+    "location": "Stuttgart, Germany",
+    "phone": "+49 711 5550 0129",
+    "phone_e164": "+4971155500129",
+    "email": "l.hoffmann@rheinwerk.example",
+    "website": "rheinwerk.example",
+    "printed": {
+      "name": "Lena Hoffmann",
+      "title_lines": [
+        "Vice President, Industrial Automation",
+        "& Digital Manufacturing Systems"
+      ],
+      "company": "Rheinwerk Systeme GmbH",
+      "address_lines": [
+        "Kernerstraße 52",
+        "70182 Stuttgart, Germany"
+      ],
+      "phones": [
+        [
+          "T",
+          "+49 711 5550 0129"
+        ]
+      ],
+      "email": "l.hoffmann@rheinwerk.example",
+      "website": "rheinwerk.example",
+      "tagline": null,
+      "non_latin": null
+    }
+  },
+  {
+    "filename": "card_07_two_phones_clean.png",
+    "difficulty": "edge",
+    "edge_cases": [
+      "two_phone_numbers",
+      "fax_number",
+      "family_name_first"
+    ],
+    "degradations": [],
+    "notes": "Two labelled numbers (mobile + office) plus a fax. The contract has a single phone field, so the extractor must pick the mobile and not concatenate.",
+    "layout": "dense_corporate",
+    "first_name": "Wei Ming",
+    "last_name": "Tan",
+    "job_title": "Regional Partnerships Lead",
+    "company": "Kallang Harbour Capital",
+    "location": "Singapore",
+    "phone": "+65 8555 0132",
+    "phone_e164": "+6585550132",
+    "email": "weiming.tan@kallangharbour.example",
+    "website": "kallangharbour.example",
+    "printed": {
+      "name": "Tan Wei Ming",
+      "title_lines": [
+        "Regional Partnerships Lead"
+      ],
+      "company": "Kallang Harbour Capital",
+      "address_lines": [
+        "18 Kallang Quay, #22-03",
+        "Singapore 339158"
+      ],
+      "phones": [
+        [
+          "M",
+          "+65 8555 0132"
+        ],
+        [
+          "T",
+          "+65 6555 0117"
+        ],
+        [
+          "F",
+          "+65 6555 0118"
+        ]
+      ],
+      "email": "weiming.tan@kallangharbour.example",
+      "website": "kallangharbour.example",
+      "tagline": "Private Credit · Infrastructure · Real Assets",
+      "non_latin": null
+    }
+  },
+  {
+    "filename": "card_08_no_email_clean.png",
+    "difficulty": "edge",
+    "edge_cases": [
+      "no_email"
+    ],
+    "degradations": [],
+    "notes": "No email address anywhere on the card — only a phone and a website. email must be null and the no_email quality flag should fire.",
+    "layout": "left_align",
+    "first_name": "Ravi",
+    "last_name": "Iyer",
+    "job_title": "Field Service Manager",
+    "company": "Sundara Instruments Pvt Ltd",
+    "location": "Pune, MH, India",
+    "phone": "+91 20 4555 0166",
+    "phone_e164": "+912045550166",
+    "email": null,
+    "website": "sundarainstruments.example",
+    "printed": {
+      "name": "Ravi Iyer",
+      "title_lines": [
+        "Field Service Manager"
+      ],
+      "company": "Sundara Instruments Pvt Ltd",
+      "address_lines": [
+        "Plot 12, Hinjawadi Phase II",
+        "Pune, MH 411057, India"
+      ],
+      "phones": [
+        [
+          "T",
+          "+91 20 4555 0166"
+        ]
+      ],
+      "email": null,
+      "website": "www.sundarainstruments.example",
+      "tagline": "Calibration · Repair · Validation",
+      "non_latin": null
+    }
+  },
+  {
+    "filename": "card_09_portrait_warp.jpg",
+    "difficulty": "degraded",
+    "edge_cases": [
+      "portrait_orientation"
+    ],
+    "degradations": [
+      "warp",
+      "shadow"
+    ],
+    "notes": "Portrait orientation photographed at an angle: perspective warp plus a soft drop shadow. Tests both the unusual aspect ratio and geometric robustness.",
+    "layout": "portrait",
+    "first_name": "Nadia",
+    "last_name": "Farouk",
+    "job_title": "Head of Brand",
+    "company": "Caravelle Studio",
+    "location": "London, United Kingdom",
+    "phone": "+44 20 7946 0132",
+    "phone_e164": "+442079460132",
+    "email": "nadia@caravellestudio.example",
+    "website": "caravellestudio.example",
+    "printed": {
+      "name": "Nadia Farouk",
+      "title_lines": [
+        "Head of Brand"
+      ],
+      "company": "Caravelle Studio",
+      "address_lines": [
+        "9 Ravenscroft Yard",
+        "London EC2A 4QT, United Kingdom"
+      ],
+      "phones": [
+        [
+          "T",
+          "+44 20 7946 0132"
+        ]
+      ],
+      "email": "nadia@caravellestudio.example",
+      "website": "caravellestudio.example",
+      "tagline": null,
+      "non_latin": null
+    }
+  },
+  {
+    "filename": "card_10_qr_lowlight.jpg",
+    "difficulty": "degraded",
+    "edge_cases": [
+      "qr_code",
+      "honorific_prefix"
+    ],
+    "degradations": [
+      "lowlight"
+    ],
+    "notes": "Real scannable QR code (MECARD payload) next to the text block, captured under-exposed. The QR must not be read as text, and the honorific 'Dr.' must stay out of first_name.",
+    "layout": "qr_block",
+    "first_name": "Elena",
+    "last_name": "Vasquez",
+    "job_title": "Managing Partner",
+    "company": "Tidewater Advisory",
+    "location": "San Francisco, CA, USA",
+    "phone": "+1 (415) 555 0188",
+    "phone_e164": "+14155550188",
+    "email": "elena.vasquez@tidewater.example",
+    "website": "tidewater.example",
+    "printed": {
+      "name": "Dr. Elena Vasquez",
+      "title_lines": [
+        "Managing Partner"
+      ],
+      "company": "Tidewater Advisory",
+      "address_lines": [
+        "500 Bayfront Plaza, Floor 12",
+        "San Francisco, CA 94105, USA"
+      ],
+      "phones": [
+        [
+          "T",
+          "+1 (415) 555 0188"
+        ]
+      ],
+      "email": "elena.vasquez@tidewater.example",
+      "website": "tidewater.example",
+      "tagline": null,
+      "non_latin": null
+    }
+  },
+  {
+    "filename": "card_11_multiline_addr_blur.jpg",
+    "difficulty": "degraded",
+    "edge_cases": [
+      "multiline_international_address"
+    ],
+    "degradations": [
+      "motion_blur"
+    ],
+    "notes": "Four-line international postal address (street, floor, postcode/city, country) shot with motion blur. location must collapse to the locality, not swallow the street line.",
+    "layout": "dense_corporate",
+    "first_name": "Ingrid",
+    "last_name": "Lindqvist",
+    "job_title": "Global Logistics Coordinator",
+    "company": "Meridian Freight Alliance",
+    "location": "Hamburg, Germany",
+    "phone": "+49 40 5550 0147",
+    "phone_e164": "+494055500147",
+    "email": "i.lindqvist@meridianfreight.example",
+    "website": "meridianfreight.example",
+    "printed": {
+      "name": "Ingrid Lindqvist",
+      "title_lines": [
+        "Global Logistics Coordinator"
+      ],
+      "company": "Meridian Freight Alliance",
+      "address_lines": [
+        "Hafenstraße 14",
+        "4. Obergeschoss",
+        "20359 Hamburg",
+        "Germany"
+      ],
+      "phones": [
+        [
+          "T",
+          "+49 40 5550 0147"
+        ]
+      ],
+      "email": "i.lindqvist@meridianfreight.example",
+      "website": "meridianfreight.example",
+      "tagline": "Member: FIATA · IATA CASS · AEO-F DE 4471 0022",
+      "non_latin": null
+    }
+  },
+  {
+    "filename": "card_12_suffix_jpeg.jpg",
+    "difficulty": "degraded",
+    "edge_cases": [
+      "generational_suffix"
+    ],
+    "degradations": [
+      "jpeg_hard"
+    ],
+    "notes": "Generational suffix 'Jr.' after the surname, plus aggressive JPEG quantisation (q=16) so 8x8 block ringing sits on every glyph edge.",
+    "layout": "centered",
+    "first_name": "James",
+    "last_name": "Okonkwo",
+    "job_title": "Account Executive",
+    "company": "BrightSpar Analytics",
+    "location": "Austin, TX, USA",
+    "phone": "+1 (512) 555 0109",
+    "phone_e164": "+15125550109",
+    "email": "j.okonkwo@brightspar.example",
+    "website": "brightspar.example",
+    "printed": {
+      "name": "James Okonkwo Jr.",
+      "title_lines": [
+        "Account Executive"
+      ],
+      "company": "BrightSpar Analytics",
+      "address_lines": [
+        "2200 Congress Avenue, Suite 410",
+        "Austin, TX 78701, USA"
+      ],
+      "phones": [
+        [
+          "T",
+          "+1 (512) 555 0109"
+        ]
+      ],
+      "email": "j.okonkwo@brightspar.example",
+      "website": "brightspar.example",
+      "tagline": null,
+      "non_latin": null
+    }
+  },
+  {
+    "filename": "card_13_dense_skew_shadow.jpg",
+    "difficulty": "degraded",
+    "edge_cases": [
+      "dense_layout",
+      "two_phone_numbers"
+    ],
+    "degradations": [
+      "skew",
+      "hard_shadow"
+    ],
+    "notes": "Dense 11-line corporate layout (registration number, two offices) captured skewed with a hard shadow edge crossing the contact block.",
+    "layout": "dense_corporate",
+    "first_name": "Hannah",
+    "last_name": "Mbeki",
+    "job_title": "Operations Director",
+    "company": "Copperleaf Foods Ltd",
+    "location": "Manchester, United Kingdom",
+    "phone": "+44 161 496 0155",
+    "phone_e164": "+441614960155",
+    "email": "h.mbeki@copperleaffoods.example",
+    "website": "copperleaffoods.example",
+    "printed": {
+      "name": "Hannah Mbeki",
+      "title_lines": [
+        "Operations Director"
+      ],
+      "company": "Copperleaf Foods Ltd",
+      "address_lines": [
+        "Unit 4, Northgate Works",
+        "Ancoats",
+        "Manchester M4 5JT",
+        "United Kingdom"
+      ],
+      "phones": [
+        [
+          "T",
+          "+44 161 496 0155"
+        ],
+        [
+          "M",
+          "+44 7700 900412"
+        ]
+      ],
+      "email": "h.mbeki@copperleaffoods.example",
+      "website": "copperleaffoods.example",
+      "tagline": "Registered in England & Wales No. 09 552 118",
+      "non_latin": null
+    }
+  },
+  {
+    "filename": "card_14_dup_of_02_blur.jpg",
+    "difficulty": "degraded",
+    "edge_cases": [
+      "duplicate_of_card_02",
+      "hyphenated_surname"
+    ],
+    "degradations": [
+      "warp",
+      "motion_blur"
+    ],
+    "notes": "Second capture of the SAME card as card_02 — blurred and warped. Exists to exercise duplicate detection: the lead should be flagged duplicate_of the card_02 lead while still extracting cleanly.",
+    "layout": "centered",
+    "first_name": "Marta",
+    "last_name": "Kowalczyk-Reyes",
+    "job_title": "Director, Clinical Operations",
+    "company": "Helix Meridian Labs",
+    "location": "Boston, MA, USA",
+    "phone": "+1 (617) 555 0142",
+    "phone_e164": "+16175550142",
+    "email": "m.kowalczyk-reyes@helixmeridian.example",
+    "website": "helixmeridian.example",
+    "printed": {
+      "name": "Marta Kowalczyk-Reyes",
+      "title_lines": [
+        "Director, Clinical Operations"
+      ],
+      "company": "Helix Meridian Labs",
+      "address_lines": [
+        "41 Harborline Street, Suite 900",
+        "Boston, MA 02210, USA"
+      ],
+      "phones": [
+        [
+          "T",
+          "+1 (617) 555 0142"
+        ]
+      ],
+      "email": "m.kowalczyk-reyes@helixmeridian.example",
+      "website": "helixmeridian.example",
+      "tagline": null,
+      "non_latin": null
+    }
+  },
+  {
+    "filename": "card_15_dark_warp.jpg",
+    "difficulty": "degraded",
+    "edge_cases": [
+      "dark_card"
+    ],
+    "degradations": [
+      "warp_hard",
+      "shadow"
+    ],
+    "notes": "Dark card at a steep angle: light-on-dark text plus perspective foreshortening that shrinks the right-hand contact block to about half its true height.",
+    "layout": "split_panel",
+    "first_name": "Rahul",
+    "last_name": "Menon",
+    "job_title": "Director of Engineering",
+    "company": "Vantara Aerosystems",
+    "location": "Hyderabad, TS, India",
+    "phone": "+91 40 4555 0121",
+    "phone_e164": "+914045550121",
+    "email": "rahul.menon@vantara-aero.example",
+    "website": "vantara-aero.example",
+    "printed": {
+      "name": "Rahul Menon",
+      "title_lines": [
+        "Director of Engineering"
+      ],
+      "company": "Vantara Aerosystems",
+      "address_lines": [
+        "Gachibowli Financial District",
+        "Hyderabad, TS 500032, India"
+      ],
+      "phones": [
+        [
+          "T",
+          "+91 40 4555 0121"
+        ]
+      ],
+      "email": "rahul.menon@vantara-aero.example",
+      "website": "vantara-aero.example",
+      "tagline": null,
+      "non_latin": null
+    }
+  },
+  {
+    "filename": "card_16_lowlight_grain.jpg",
+    "difficulty": "degraded",
+    "edge_cases": [],
+    "degradations": [
+      "lowlight_hard",
+      "grain"
+    ],
+    "notes": "Under-exposed handheld capture with sensor grain — roughly 2.5 stops down. Low-contrast muted secondary text is the first thing to disappear.",
+    "layout": "logo_block",
+    "first_name": "Claire",
+    "last_name": "Beaumont",
+    "job_title": "Head of People Operations",
+    "company": "Orrery Health",
+    "location": "Bristol, United Kingdom",
+    "phone": "+44 117 496 0155",
+    "phone_e164": "+441174960155",
+    "email": "c.beaumont@orreryhealth.example",
+    "website": "orreryhealth.example",
+    "printed": {
+      "name": "Claire Beaumont",
+      "title_lines": [
+        "Head of People Operations"
+      ],
+      "company": "Orrery Health",
+      "address_lines": [
+        "The Old Dispensary, Redcliff Street",
+        "Bristol BS1 6NL, United Kingdom"
+      ],
+      "phones": [
+        [
+          "T",
+          "+44 117 496 0155"
+        ]
+      ],
+      "email": "c.beaumont@orreryhealth.example",
+      "website": "orreryhealth.example",
+      "tagline": null,
+      "non_latin": null
+    }
+  },
+  {
+    "filename": "card_17_lowres_jpeg.jpg",
+    "difficulty": "degraded",
+    "edge_cases": [
+      "non_ascii_diacritics"
+    ],
+    "degradations": [
+      "lowres",
+      "jpeg_mid"
+    ],
+    "notes": "Low-resolution capture (long edge 620 px) re-encoded at q=28 — simulates a phone photo taken too far away and then messaged. Umlaut in the city name.",
+    "layout": "left_align",
+    "first_name": "Tobias",
+    "last_name": "Herrmann",
+    "job_title": "Procurement Manager",
+    "company": "Nordlicht Verpackung GmbH",
+    "location": "Düsseldorf, Germany",
+    "phone": "+49 211 5550 0193",
+    "phone_e164": "+4921155500193",
+    "email": "t.herrmann@nordlicht-vp.example",
+    "website": "nordlicht-vp.example",
+    "printed": {
+      "name": "Tobias Herrmann",
+      "title_lines": [
+        "Procurement Manager"
+      ],
+      "company": "Nordlicht Verpackung GmbH",
+      "address_lines": [
+        "Rheinuferweg 8",
+        "40213 Düsseldorf, Germany"
+      ],
+      "phones": [
+        [
+          "T",
+          "+49 211 5550 0193"
+        ]
+      ],
+      "email": "t.herrmann@nordlicht-vp.example",
+      "website": "nordlicht-vp.example",
+      "tagline": null,
+      "non_latin": null
+    }
+  },
+  {
+    "filename": "card_18_glare_warp.jpg",
+    "difficulty": "degraded",
+    "edge_cases": [
+      "bilingual_ja_en",
+      "non_latin_script",
+      "dark_card"
+    ],
+    "degradations": [
+      "warp",
+      "glare"
+    ],
+    "notes": "Bilingual JP/EN card under a specular highlight from an overhead light, warped. The glare sits over the company line on the English half.",
+    "layout": "bilingual",
+    "first_name": "Aiko",
+    "last_name": "Nakamura",
+    "job_title": "Investor Relations Manager",
+    "company": "Kaiyo Marine Holdings",
+    "location": "Yokohama, Kanagawa, Japan",
+    "phone": "+81 45 555 0187",
+    "phone_e164": "+81455550187",
+    "email": "a.nakamura@kaiyo-marine.example",
+    "website": "kaiyo-marine.example",
+    "printed": {
+      "name": "Aiko Nakamura",
+      "title_lines": [
+        "Investor Relations Manager"
+      ],
+      "company": "Kaiyo Marine Holdings",
+      "address_lines": [
+        "3-2-1 Minatomirai, Nishi-ku",
+        "Yokohama, Kanagawa 220-0012, Japan"
+      ],
+      "phones": [
+        [
+          "T",
+          "+81 45 555 0187"
+        ]
+      ],
+      "email": "a.nakamura@kaiyo-marine.example",
+      "website": "kaiyo-marine.example",
+      "tagline": null,
+      "non_latin": {
+        "name": "中村 愛子",
+        "title": "インベスター・リレーションズマネージャー",
+        "company": "海洋マリンホールディングス株式会社",
+        "addr1": "神奈川県横浜市西区みなとみらい3-2-1",
+        "addr2": "電話：045-555-0187"
+      }
+    }
+  },
+  {
+    "filename": "card_19_motionblur_dark.jpg",
+    "difficulty": "degraded",
+    "edge_cases": [
+      "dark_card"
+    ],
+    "degradations": [
+      "motion_blur_hard"
+    ],
+    "notes": "Dark centred card with directional motion blur at ~20 degrees — the worst combination, because light-on-dark glyph strokes smear into the background.",
+    "layout": "centered",
+    "first_name": "Marcus",
+    "last_name": "Oyelaran",
+    "job_title": "Chief Revenue Officer",
+    "company": "Silverpine Logistics",
+    "location": "Chicago, IL, USA",
+    "phone": "+1 (312) 555 0164",
+    "phone_e164": "+13125550164",
+    "email": "m.oyelaran@silverpine.example",
+    "website": "silverpine.example",
+    "printed": {
+      "name": "Marcus Oyelaran",
+      "title_lines": [
+        "Chief Revenue Officer"
+      ],
+      "company": "Silverpine Logistics",
+      "address_lines": [
+        "310 W Kinzie Street, Floor 6",
+        "Chicago, IL 60654, USA"
+      ],
+      "phones": [
+        [
+          "T",
+          "+1 (312) 555 0164"
+        ]
+      ],
+      "email": "m.oyelaran@silverpine.example",
+      "website": "silverpine.example",
+      "tagline": null,
+      "non_latin": null
+    }
+  },
+  {
+    "filename": "card_20_skew_lowlight.jpg",
+    "difficulty": "degraded",
+    "edge_cases": [
+      "hyphenated_surname",
+      "non_ascii_diacritics"
+    ],
+    "degradations": [
+      "skew",
+      "lowlight"
+    ],
+    "notes": "Compound surname with a locale twist (Indian given name, German married name), skewed 6 degrees and under-exposed. Also shares its employer with card_02/card_14 but from a different office.",
+    "layout": "left_align",
+    "first_name": "Priyanka",
+    "last_name": "Sharma-Vogel",
+    "job_title": "Lead UX Researcher",
+    "company": "Helix Meridian Labs",
+    "location": "Berlin, Germany",
+    "phone": "+49 30 5550 0178",
+    "phone_e164": "+493055500178",
+    "email": "p.sharma-vogel@helixmeridian.example",
+    "website": "helixmeridian.example",
+    "printed": {
+      "name": "Priyanka Sharma-Vogel",
+      "title_lines": [
+        "Lead UX Researcher"
+      ],
+      "company": "Helix Meridian Labs",
+      "address_lines": [
+        "Chausseestraße 117",
+        "10115 Berlin, Germany"
+      ],
+      "phones": [
+        [
+          "T",
+          "+49 30 5550 0178"
+        ]
+      ],
+      "email": "p.sharma-vogel@helixmeridian.example",
+      "website": "helixmeridian.example",
+      "tagline": null,
+      "non_latin": null
+    }
+  }
+]
