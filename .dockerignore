@@ -1,0 +1,21 @@
+# Applies whichever directory is used as the build context.
+frontend/node_modules
+frontend/.next
+**/node_modules
+**/.next
+**/.venv
+**/venv
+**/__pycache__
+**/*.py[cod]
+**/.pytest_cache
+**/.ruff_cache
+**/*.egg-info
+**/.DS_Store
+data/
+dist/
+.git/
+screenshots/
+playwright-report/
+test-results/
+.env
+.env.local

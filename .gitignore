@@ -1,0 +1,34 @@
+# secrets
+.env
+.env.local
+.env.*.local
+*.pem
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# node
+node_modules/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+playwright-report/
+test-results/
+
+# runtime data
+data/
+uploads/
+*.xlsx
+!samples/**/*.xlsx
+
+# os
+.DS_Store
