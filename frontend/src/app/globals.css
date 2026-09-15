@@ -1,0 +1,392 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Surface — near-black, cool, with a lift ladder rather than flat #000 */
+  --color-void: oklch(0.145 0.012 265);
+  --color-surface: oklch(0.185 0.014 265);
+  --color-raised: oklch(0.225 0.016 265);
+  --color-line: oklch(0.295 0.018 265);
+
+  /* Ink */
+  --color-ink: oklch(0.97 0.005 265);
+  --color-ink-muted: oklch(0.72 0.012 265);
+  --color-ink-faint: oklch(0.55 0.014 265);
+
+  /* Accent — LeadForge runs ember → magenta */
+  --color-accent: oklch(0.72 0.19 55);
+  --color-accent-2: oklch(0.66 0.24 330);
+
+  --color-ok: oklch(0.76 0.17 155);
+  --color-warn: oklch(0.8 0.16 85);
+  --color-bad: oklch(0.65 0.21 25);
+
+  --radius-card: 14px;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, 'JetBrains Mono', monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background-color: var(--color-void);
+  }
+
+  body {
+    background-color: transparent;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: color-mix(in oklch, var(--color-accent) 40%, transparent);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* Every number in the UI is tabular monospace. */
+  .tnum {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line);
+    border-radius: 999px;
+    border: 3px solid var(--color-void);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.38 0.02 265);
+  }
+}
+
+/* ---------------------------------------------------------------- aurora field */
+/* One fixed layer, four gradient blobs, no canvas and no per-frame JS. Hue and
+   intensity respond to [data-phase] on <html>, which the pages set imperatively so a
+   state change never re-renders the tree. */
+
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 50% -10%, oklch(0.21 0.03 290) 0%, transparent 55%),
+    var(--color-void);
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+  transition:
+    opacity 1400ms var(--ease-out-expo),
+    background 1400ms linear;
+}
+
+.aurora-a {
+  width: 78vmax;
+  height: 62vmax;
+  left: -16vmax;
+  top: -22vmax;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklch, var(--color-accent) 34%, transparent),
+    transparent 72%
+  );
+  opacity: 0.5;
+  animation: drift-a 46s ease-in-out infinite alternate;
+}
+
+.aurora-b {
+  width: 70vmax;
+  height: 58vmax;
+  right: -18vmax;
+  top: -14vmax;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklch, var(--color-accent-2) 40%, transparent),
+    transparent 70%
+  );
+  opacity: 0.45;
+  animation: drift-b 58s ease-in-out infinite alternate;
+}
+
+.aurora-c {
+  width: 96vmax;
+  height: 60vmax;
+  left: 20vmax;
+  bottom: -34vmax;
+  background: radial-gradient(closest-side, oklch(0.45 0.17 290 / 0.5), transparent 70%);
+  opacity: 0.4;
+  animation: drift-c 72s ease-in-out infinite alternate;
+}
+
+/* Only visible while the pipeline is running: a slow diagonal pass of light. */
+.aurora-sweep {
+  position: absolute;
+  inset: -30% -60%;
+  opacity: 0;
+  background: linear-gradient(
+    104deg,
+    transparent 38%,
+    color-mix(in oklch, var(--color-accent) 12%, transparent) 50%,
+    transparent 62%
+  );
+  will-change: transform;
+  transition: opacity 900ms var(--ease-out-expo);
+  animation: sweep 7.5s linear infinite;
+}
+
+.aurora-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.aurora-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    130% 100% at 50% 35%,
+    transparent 30%,
+    color-mix(in oklch, var(--color-void) 78%, transparent) 100%
+  );
+}
+
+[data-phase='processing'] .aurora-a {
+  opacity: 0.72;
+}
+[data-phase='processing'] .aurora-b {
+  opacity: 0.66;
+}
+[data-phase='processing'] .aurora-sweep {
+  opacity: 1;
+}
+[data-phase='done'] .aurora-a {
+  opacity: 0.3;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklch, var(--color-ok) 26%, transparent),
+    transparent 72%
+  );
+}
+[data-phase='done'] .aurora-b {
+  opacity: 0.34;
+}
+[data-phase='error'] .aurora-a {
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklch, var(--color-bad) 32%, transparent),
+    transparent 72%
+  );
+  opacity: 0.55;
+}
+
+@keyframes drift-a {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(14vmax, 9vmax, 0) scale(1.14);
+  }
+}
+@keyframes drift-b {
+  from {
+    transform: translate3d(0, 0, 0) scale(1.08);
+  }
+  to {
+    transform: translate3d(-12vmax, 12vmax, 0) scale(0.94);
+  }
+}
+@keyframes drift-c {
+  from {
+    transform: translate3d(-8vmax, 0, 0) scale(0.96);
+  }
+  to {
+    transform: translate3d(10vmax, -8vmax, 0) scale(1.12);
+  }
+}
+@keyframes sweep {
+  from {
+    transform: translate3d(-40%, 0, 0);
+  }
+  to {
+    transform: translate3d(40%, 0, 0);
+  }
+}
+
+/* ------------------------------------------------------- signature: scanline */
+/* A single transform-animated band over the card thumbnail. Transform-only so it stays
+   on the compositor even with 25 tiles running at once. */
+
+.scanfield {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--color-accent) 9%, transparent) 0 1px,
+    transparent 1px 5px
+  );
+}
+
+.scanband {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 46%;
+  will-change: transform;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    color-mix(in oklch, var(--color-accent) 14%, transparent) 55%,
+    color-mix(in oklch, var(--color-accent) 42%, transparent) 88%,
+    color-mix(in oklch, var(--color-accent-2) 70%, transparent) 99%,
+    transparent 100%
+  );
+  animation: scan 2.1s cubic-bezier(0.5, 0.05, 0.5, 0.95) infinite;
+}
+
+.scanband::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-accent) 18%,
+    oklch(0.98 0.05 60) 50%,
+    var(--color-accent-2) 82%,
+    transparent
+  );
+  box-shadow: 0 0 14px 2px color-mix(in oklch, var(--color-accent) 65%, transparent);
+}
+
+@keyframes scan {
+  from {
+    transform: translate3d(0, -110%, 0);
+  }
+  to {
+    transform: translate3d(0, 230%, 0);
+  }
+}
+
+/* --------------------------------------------------- pipeline rail shimmer */
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    color-mix(in oklch, var(--color-ink) 55%, transparent) 50%,
+    transparent 70%
+  );
+  transform: translate3d(-100%, 0, 0);
+  animation: travel 1.9s linear infinite;
+}
+
+@keyframes travel {
+  to {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+/* ------------------------------------------------------------- small helpers */
+
+.hairline {
+  border: 1px solid var(--color-line);
+}
+
+.glass {
+  background: color-mix(in oklch, var(--color-surface) 78%, transparent);
+  backdrop-filter: blur(14px);
+}
+
+.dropzone-grid {
+  background-image:
+    linear-gradient(color-mix(in oklch, var(--color-line) 55%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklch, var(--color-line) 55%, transparent) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(70% 70% at 50% 50%, black, transparent 78%);
+}
+
+.pulse-soft {
+  animation: pulse-soft 2.6s ease-in-out infinite;
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+
+/* ------------------------------------------------------------ reduced motion */
+/* The band becomes a static wash and the aurora stops drifting; nothing that conveys
+   state is lost, it just stops moving. */
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-blob,
+  .aurora-sweep,
+  .shimmer::after,
+  .pulse-soft {
+    animation: none;
+  }
+
+  .shimmer::after {
+    transform: none;
+    opacity: 0.25;
+  }
+
+  .scanband {
+    animation: none;
+    height: 100%;
+    opacity: 0.22;
+    transform: none;
+  }
+
+  .scanband::after {
+    display: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}
