@@ -24,9 +24,12 @@ const VERT = /* glsl */ `
     float dist = max(-mv.z, 0.0001);
     // Capped: inside the cloud in follow-cam, uncapped attenuation turns nearby points into
     // screen-filling blobs.
-    gl_PointSize = clamp(uSize * uScale / dist, 1.2, 14.0);
+    // Floor of 2.6 px, not 1.2: a corridor-shaped cloud spreads a few thousand points over a
+    // large radius, and uSize scales with that radius, so distant points collapsed to a
+    // single dim pixel and the whole scene read as empty.
+    gl_PointSize = clamp(uSize * uScale / dist, 2.6, 16.0);
     // Depth cue: far points recede instead of fighting the near ones for attention.
-    vFade = clamp(1.0 - (dist - uNear) / (uFar - uNear), 0.34, 1.0);
+    vFade = clamp(1.0 - (dist - uNear) / (uFar - uNear), 0.55, 1.0);
     gl_Position = projectionMatrix * mv;
   }
 `;
@@ -44,7 +47,12 @@ const FRAG = /* glsl */ `
     if (alpha < 0.02) discard;
     // Slight core lift so clusters read as solid surface rather than speckle.
     vec3 c = vColor * (0.88 + 0.30 * (1.0 - min(d2 * 4.0, 1.0)));
-    gl_FragColor = vec4(pow(c, vec3(2.2)), alpha);
+    // No manual gamma here. pointColor is already sRGB (sampled straight from the source
+    // frame), and the colorspace_fragment include below converts linear->sRGB for the
+    // renderer output space. Applying pow(c, 2.2) as well darkened everything a second
+    // time -- a mid-grey point landed near 0.22 -- which made sparse clouds read as an
+    // empty canvas.
+    gl_FragColor = vec4(c, alpha);
     #include <colorspace_fragment>
   }
 `;
