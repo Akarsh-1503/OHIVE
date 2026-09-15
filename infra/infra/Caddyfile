@@ -1,0 +1,83 @@
+# Caddyfile — single reverse proxy + automatic Let's Encrypt TLS for both apps.
+#
+# Hostnames are NOT hardcoded. {$PUBLIC_IP_DASHED} comes from /opt/ak-project/.env,
+# which bootstrap.sh regenerates from the instance metadata on every boot. Move the
+# stack to a different IP and the certs follow without editing this file.
+#
+# nip.io gives us real, publicly-resolvable DNS for a bare IP (leads-1-2-3-4.nip.io
+# -> 1.2.3.4). It sits on the Public Suffix List, so Let's Encrypt treats each
+# subdomain as its own registrable domain and they do not share a rate-limit bucket.
+#
+# No global `email` directive: ACME registration without a contact address is valid,
+# and hardcoding one here would put a personal address in the repo. Set ACME_EMAIL
+# and add `email {$ACME_EMAIL}` to the global block if expiry notices are wanted.
+
+{
+	# Shrink the ACME retry window; the default is fine but slow to surface a
+	# misconfigured DNS record during a first deploy.
+	servers {
+		trusted_proxies static private_ranges
+	}
+}
+
+(hardening) {
+	encode zstd gzip
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+}
+
+(proxy_errors) {
+	# Without this, a not-yet-deployed app returns Caddy's bare 502 and looks like
+	# a TLS failure to anyone testing the URL.
+	handle_errors {
+		@gone expression {err.status_code} in [502, 503, 504]
+		respond @gone "upstream not deployed yet ({err.status_code})" {err.status_code}
+	}
+}
+
+# ---------------------------------------------------------------- Assignment 1
+leads-{$PUBLIC_IP_DASHED}.nip.io {
+	import hardening
+	import proxy_errors
+
+	# The API contract mounts everything under /api/v1, so the prefix is passed
+	# through untouched rather than stripped.
+	handle /api/* {
+		reverse_proxy leads-api:8000 {
+			# flush_interval -1 disables response buffering outright. The batch
+			# progress endpoint is SSE and would otherwise stall behind the proxy
+			# buffer until the stream closed.
+			flush_interval -1
+		}
+	}
+
+	handle {
+		reverse_proxy leads-web:3000
+	}
+}
+
+# ---------------------------------------------------------------- Assignment 2
+slam-{$PUBLIC_IP_DASHED}.nip.io {
+	import hardening
+	import proxy_errors
+
+	handle /api/* {
+		reverse_proxy slam-api:8000 {
+			flush_interval -1
+			# Reconstruction jobs stream progress for minutes and uploads run to
+			# 200 MB, so the proxy must not time out before the backend does.
+			transport http {
+				read_timeout 30m
+				write_timeout 30m
+			}
+		}
+	}
+
+	handle {
+		reverse_proxy slam-web:3000
+	}
+}
