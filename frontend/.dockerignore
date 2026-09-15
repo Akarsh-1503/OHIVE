@@ -1,0 +1,10 @@
+node_modules
+.next
+screenshots
+test-results
+playwright-report
+.env
+.env.local
+.git
+Dockerfile
+.dockerignore
