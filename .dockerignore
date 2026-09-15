@@ -1,0 +1,24 @@
+# Build context is assignment2/ so that the backend image can `pip install ./slam`.
+# Without this file the context would also drag in the frontend's node_modules and the
+# sample videos, which turns a ~2 MB context into hundreds of MB.
+frontend/
+docs/
+bench/results.json
+**/node_modules
+**/.next
+**/.venv
+**/venv
+**/__pycache__
+**/*.py[cod]
+**/.pytest_cache
+**/.ruff_cache
+**/*.egg-info
+**/.DS_Store
+data/
+dist/
+.git/
+screenshots/
+playwright-report/
+test-results/
+.env
+.env.local
