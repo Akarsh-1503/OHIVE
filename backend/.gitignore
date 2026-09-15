@@ -1,0 +1,10 @@
+.env
+.env.local
+.venv/
+data/
+*.mp4
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
