@@ -1,0 +1,144 @@
+# Driftless — standalone developer stack.
+#
+#   docker compose up --build                      ->  http://localhost:3000   (stub engine)
+#   SLAM_BACKEND=real docker compose up --build    ->  the real reconstruction
+#
+# This file is for running Driftless on its own machine: it BUILDS both images from source
+# and publishes them on localhost. It is deliberately not the deployment stack — the live
+# host runs `infra/docker-compose.yml` at the repository root, which puts both assignments
+# behind one Caddy reverse proxy with Let's Encrypt TLS and only ever consumes pre-built
+# `ak-project/*` images. The two files do not overlap: this one owns "how do I build and
+# run it", that one owns "how is it served publicly".
+#
+# Everything has a working default, so a clean clone with no .env comes up and runs the
+# bundled sample clips end to end. No GPU, no model download, no API key, no network egress.
+
+name: driftless
+
+services:
+  api:
+    build:
+      # THE CONTEXT IS THIS DIRECTORY (assignment2/), NOT ./backend. The image runs
+      # `pip install ./slam` on the sibling SLAM engine, so the engine has to be inside the
+      # build context; `dockerfile:` is therefore a path relative to assignment2/.
+      # `.dockerignore` here keeps that context at ~3 MB by excluding the frontend,
+      # node_modules and the bench results.
+      context: .
+      dockerfile: backend/Dockerfile
+    image: driftless-api:dev
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-8000}:8000"
+    environment:
+      DATA_DIR: /data
+      SAMPLES_DIR: /samples
+
+      # ---- which engine runs -------------------------------------------------------
+      # Default `stub`: a synthetic reconstruction (camera on a rising helix, ~6 000 points
+      # on a cylindrical shell and floor plane, colours sampled from the real clip) with
+      # contract-shaped metrics and realistically paced progress events. It needs no CPU
+      # budget and no engine, and it exercises the entire product — upload validation, the
+      # SSE stream, the WebGL viewer, the metrics panel, the PLY/TUM/report exports.
+      #
+      # FLIP THIS TO `real` TO RUN ACTUAL SLAM. The engine is already inside the image:
+      #
+      #     SLAM_BACKEND=real docker compose up --build
+      #
+      # Everything the submission claims about drift and timing is measured with `real`.
+      # `GET /api/v1/health` echoes `slam_backend`, so which one is running is never
+      # ambiguous. Stub metrics are synthetic and must not be read as measurements.
+      SLAM_BACKEND: ${SLAM_BACKEND:-stub}
+
+      # ---- engine tuning -----------------------------------------------------------
+      SLAM_TARGET_WIDTH: ${SLAM_TARGET_WIDTH:-640}
+      SLAM_MAX_FEATURES: ${SLAM_MAX_FEATURES:-1200}
+      SLAM_MAX_FRAMES: ${SLAM_MAX_FRAMES:-1800}
+      SLAM_WORKERS: ${SLAM_WORKERS:-4}
+      # Stays at 1 on purpose. A second concurrent reconstruction roughly halves single-job
+      # throughput on an 8-vCPU host and would invalidate the published benchmark, so extra
+      # jobs queue in FIFO order and report `queue_position`.
+      SLAM_MAX_CONCURRENT_JOBS: ${SLAM_MAX_CONCURRENT_JOBS:-1}
+      SLAM_MAX_POINTS_WEB: ${SLAM_MAX_POINTS_WEB:-60000}
+      SLAM_STUB_DURATION_S: ${SLAM_STUB_DURATION_S:-1.2}
+
+      # ---- limits and service ------------------------------------------------------
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-200}
+      MAX_VIDEO_DURATION_S: ${MAX_VIDEO_DURATION_S:-60}
+      JOB_TTL_HOURS: ${JOB_TTL_HOURS:-24}
+      # The browser calls the API cross-origin on localhost (:3000 -> :8000), so the dev
+      # stack has to allow it. Behind the production reverse proxy both are same-origin.
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      # Uploads, reconstructions, PLY/TUM exports and the gzipped web payloads.
+      #
+      # A NAMED VOLUME, not a ./data bind mount, and that is deliberate. The image runs as
+      # the unprivileged uid 10001 it creates at build time; a named volume inherits that
+      # ownership from the image on every platform, a host directory does not — on Linux it
+      # takes the host's ownership and the container cannot write to it. Docker Desktop
+      # additionally refuses to share host paths that are not on its file-sharing list, so a
+      # clone under ~/Desktop or ~/Documents fails outright with `operation not permitted`.
+      #
+      # The volume survives `docker compose down`; `down -v` is what deletes it. To pull an
+      # artefact out without a bind mount:
+      #
+      #     docker compose cp api:/data/<job_id>/cloud.ply ./cloud.ply
+      #
+      # If you do want the artefacts on the host, create ./data yourself, swap the line
+      # below for `- ./data:/data`, and on Linux also add
+      # `user: "${DRIFTLESS_UID}:${DRIFTLESS_GID}"` to this service and start it with
+      # `make up`, which exports both from `id -u` / `id -g`.
+      - driftless-data:/data
+      # The three bundled demo clips and their ground truth. The image sets
+      # SAMPLES_DIR=/samples but ships that directory EMPTY — without this mount
+      # `GET /api/v1/samples` returns `[]` and the one-click demo has nothing to run.
+      # Read-only: these are repository content, not runtime state.
+      - ./samples:/samples:ro
+    # Worker processes exchange frames and descriptor blocks through /dev/shm; the 64 MB
+    # Docker default is too small at 1200 features per frame.
+    shm_size: 1gb
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import sys,urllib.request; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health', timeout=4).status == 200 else 1)"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # NEXT_PUBLIC_* is inlined into the client bundle at build time, so this must be the
+        # URL the *browser* will use — not the compose-internal hostname. Change API_PORT
+        # and this follows it.
+        NEXT_PUBLIC_API_BASE: ${NEXT_PUBLIC_API_BASE:-http://localhost:${API_PORT:-8000}/api/v1}
+        NEXT_PUBLIC_MOCK: ${NEXT_PUBLIC_MOCK:-0}
+    image: driftless-web:dev
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+volumes:
+  driftless-data:
