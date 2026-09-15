@@ -1,0 +1,34 @@
+[
+  {
+    "id": "synthetic_loop",
+    "name": "Synthetic room loop",
+    "description": "Virtual pinhole camera on a closed elliptical path inside a textured 7 m room. Returns to the start pose, so loop closure has a true match. Ships with ground-truth trajectory and cloud.",
+    "duration_s": 10.0,
+    "url": "/api/v1/samples/synthetic_loop/file",
+    "file": "synthetic_loop.mp4"
+  },
+  {
+    "id": "synthetic_corridor",
+    "name": "Synthetic corridor (open-ended)",
+    "description": "Straight 9.6 m forward translation down a textured corridor. No revisited viewpoint, so loop closure cannot fire and drift accumulates monotonically. Ships with ground truth.",
+    "duration_s": 10.0,
+    "url": "/api/v1/samples/synthetic_corridor/file",
+    "file": "synthetic_corridor.mp4"
+  },
+  {
+    "id": "office_handheld",
+    "name": "Handheld office (TUM fr3/long_office)",
+    "description": "Real handheld footage shot with deliberate, steady motion \u2014 peak rotation under 1 deg/frame against 7.6 for the fr1/desk clip. The like-for-like 'ordinary handheld video' case: 298/300 frames tracked with no tracking loss. Ships with motion-capture ground truth.",
+    "duration_s": 10.0,
+    "url": "/api/v1/samples/office_handheld/file",
+    "file": "office_handheld_tum.mp4"
+  },
+  {
+    "id": "desk_handheld",
+    "name": "Handheld office desk (TUM fr1/desk)",
+    "description": "Real handheld 640x480 capture sweeping an office desk and returning to its starting viewpoint, with 100 Hz motion-capture ground truth. TUM RGB-D benchmark, CC BY 4.0.",
+    "duration_s": 10.0,
+    "url": "/api/v1/samples/desk_handheld/file",
+    "file": "desk_handheld_tum.mp4"
+  }
+]
