@@ -40,6 +40,7 @@ export function Dropzone() {
   const inputRef = useRef<HTMLInputElement>(null);
   const dragDepth = useRef(0);
   const queueRef = useRef<Queued[]>([]);
+  const queueListRef = useRef<HTMLDivElement>(null);
   queueRef.current = queue;
 
   useEffect(
@@ -135,6 +136,17 @@ export function Dropzone() {
       clear();
       add(files);
       toast.success(`Loaded ${files.length} sample cards`);
+      // The queue renders below the dropzone, which on a laptop viewport puts it under the
+      // fold: the counter ticks to "10/25 cards" while the thumbnails and the Extract
+      // button stay invisible, so the button reads as having done nothing.
+      //
+      // Deferred past the enter animation on purpose. The container animates height from 0,
+      // so scrolling on the next frame targets an element that still has no height and the
+      // page does not move at all.
+      window.setTimeout(
+        () => queueListRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }),
+        420,
+      );
     } catch {
       toast.error('Could not load the sample corpus');
     } finally {
@@ -305,6 +317,7 @@ export function Dropzone() {
       <AnimatePresence initial={false}>
         {queue.length > 0 ? (
           <motion.div
+            ref={queueListRef}
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
