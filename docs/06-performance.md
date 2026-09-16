@@ -9,7 +9,7 @@ Two machines appear in this document and they are kept strictly apart:
 | | |
 |---|---|
 | **Dev machine** | Apple M4, 10 vCPU, 17.2 GB, macOS, Python 3.11.9. This is where `bench/results.json` was produced and where every number labelled *dev machine* comes from |
-| **Deployment host** | GCE `c3-standard-4`, Intel Xeon Platinum 8481C @ 2.70 GHz, **4 vCPU / 16 GiB**, Ubuntu 24.04, `asia-south1-b`. This is what the public URL runs on |
+| **Deployment host** | GCE `c3-standard-8`, Intel Xeon Platinum 8481C @ 2.70 GHz, **8 vCPU / 32 GiB** (the SLAM container is capped at 6 CPUs), Ubuntu 24.04, `asia-south1-b`. This is what the public URL runs on |
 
 A number from one is never presented as a number from the other, and a projection is never
 presented as a measurement.
@@ -156,29 +156,36 @@ from each job's own `report.json`.
 
 | clip | `wall_ms` | ×realtime | poses | keyframes | closures | drift reduction | |
 |---|---|---|---|---|---|---|---|
-| `office_handheld` (TUM fr3) | **9 645 ms** | 1.04× | 297/300 | 19 | 0 | n/a | inside budget |
-| `synthetic_corridor` | **7 841 ms** | 1.28× | 288/300 | 24 | 0 (no revisit) | n/a | inside budget |
-| `synthetic_loop` | **11 293 ms** | 0.89× | 231/300 | 30 | 1 | **89.5 %** | 13 % over |
-| `desk_handheld` (TUM fr1) | **15 205 ms** | 0.66× | 294/300 | 49 | 2 | **99.8 %** | 52 % over |
+| `synthetic_corridor` | **6 583 / 6 758 ms** | 1.48–1.52× | 288/300 | 24 | 0 (no revisit) | n/a | inside budget |
+| `office_handheld` (TUM fr3) | **6 788 / 7 881 ms** | 1.27–1.47× | 297/300 | 19 | 0 | n/a | inside budget |
+| `synthetic_loop` | **9 588 / 9 772 ms** | 1.02–1.04× | 231/300 | 30 | 1 | **89.5 %** | inside budget |
+| `desk_handheld` (TUM fr1) | **13 873 / 14 132 ms** | 0.71–0.72× | 294/300 | 49 | 2 | **99.8 %** | 39 % over |
 
-**Two of the four bundled clips meet the 10 s budget on the deployed host, including a
+**Three of the four bundled clips meet the 10 s budget on the deployed host, including a
 real-world one.** Run-to-run spread is well under 1 %, so these are stable figures rather than
 noise or a cold-start artefact.
 
-### The host is deliberately sized down
+### Host sizing, and what it costs
 
-These numbers are from a **`c3-standard-4`** (4 vCPU / 16 GiB, **$5.55/day**). An earlier
-measurement on `c3-standard-8` (8 vCPU / 32 GiB, $10.58/day) gave `synthetic_corridor` 7.0 s,
-`synthetic_loop` **9.7 s — inside budget** and `desk_handheld` 13.8 s, i.e. three of four
-passing. Halving the cores to halve the running cost is what moves `synthetic_loop` from 9.7 s
-to 11.3 s.
+The engine is single-thread-bound with two helper threads, so wall time tracks single-core
+performance far more than core count. Measured on the same code and the same clips:
 
-That is a deployment-economics decision on a demo box, not an engine limitation, and it is
-recorded here rather than presented as the engine's best achievable performance. Two machine
-alternatives were measured and rejected: `c2d-highcpu-8` (AMD EPYC 7B13, $7.43/day) was
-**slower than 4 Intel cores** despite having eight, and `c4-standard-4` — the one most likely
-to help, being a higher-clock Emerald Rapids part — could not be tested because C4 requires
+| host | corridor | office | loop | desk | passing |
+|---|---|---|---|---|---|
+| `c3-standard-8` (8 vCPU, container capped at 6) | 6.6 s | 6.8 s | **9.6 s** | 13.9 s | **3 of 4** |
+| `c3-standard-4` (4 vCPU) | 7.8 s | 9.6 s | 11.3 s | 15.2 s | 2 of 4 |
+
+Two alternatives were measured and rejected. `c2d-highcpu-8` (AMD EPYC 7B13) came out
+**slower than four Intel cores** despite having eight, which is the clearest evidence that
+this workload wants clock rather than parallelism. `c4-standard-4` — a higher-clock Emerald
+Rapids part, and the most promising option — could not be tested at all, because C4 requires
 Hyperdisk and the boot disk is `pd-balanced`.
+
+One operational note worth recording, because it produced a genuinely misleading measurement:
+the SLAM container carries an explicit CPU ceiling, and after a resize that ceiling does not
+follow the host. An 8-vCPU host still running a 3-CPU container measured *slower* than the
+4-vCPU box (desk 18.4 s against 15.2 s). The compose limits are parameterised
+(`SLAM_API_CPUS`) precisely so they can be moved with the machine type; they have to be.
 
 ### What changed, and what was rejected
 

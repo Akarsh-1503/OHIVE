@@ -44,11 +44,9 @@ requirement #4 directly. If you read three, read [**07 — limitations**](07-lim
 
 > ### One number you should not have to hunt for
 > **Requirement #6 — "a 10-second video in ≤10 seconds in the demonstrated test environment."**
-> Measured against the live URL on a `c3-standard-4`: `office_handheld` (real TUM fr3 footage)
-> **9.6 s** and `synthetic_corridor` **7.8 s** are inside the budget; `synthetic_loop`
-> **11.3 s** and `desk_handheld` (real TUM fr1) **15.2 s** are over. On the larger
-> `c3-standard-8` the loop clip ran **9.7 s**, inside budget — the host was sized down to halve
-> running cost, which is a deployment choice, not an engine limit.
+> Measured against the live URL: `synthetic_corridor` **6.6 s**, `office_handheld` (real TUM
+> fr3 footage) **6.8 s** and `synthetic_loop` **9.6 s** are all inside the budget;
+> `desk_handheld` (real TUM fr1) at **13.9 s** is not.
 >
 > The handheld clip is the interesting one. 151 frames of rotational motion blur drive the
 > tracker to 49 keyframes against 24–30, and bundle adjustment runs once per keyframe — those

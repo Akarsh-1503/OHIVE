@@ -258,15 +258,12 @@ environment**." The demonstrated environment is the public URL. Measured against
 
 | clip | `wall_ms` | ×realtime | poses | keyframes | |
 |---|---|---|---|---|---|
-| `office_handheld` (TUM fr3, real) | 9 645 ms | 1.04× | 297/300 | 19 | **inside budget** |
-| `synthetic_corridor` | 7 841 ms | 1.28× | 288/300 | 24 | **inside budget** |
-| `synthetic_loop` | **11 293 ms** | 0.89× | 231/300 | 30 | **13 % over** |
-| `desk_handheld` (TUM fr1, real) | **15 205 ms** | 0.66× | 294/300 | 49 | **52 % over** |
+| `synthetic_corridor` | 6 583 / 6 758 ms | 1.48–1.52× | 288/300 | 24 | **inside budget** |
+| `office_handheld` (TUM fr3, real) | 6 788 / 7 881 ms | 1.27–1.47× | 297/300 | 19 | **inside budget** |
+| `synthetic_loop` | 9 588 / 9 772 ms | 1.02–1.04× | 231/300 | 30 | **inside budget** |
+| `desk_handheld` (TUM fr1, real) | **13 873 / 14 132 ms** | 0.71–0.72× | 294/300 | 49 | **39 % over** |
 
-Measured on a **`c3-standard-4`** (4 vCPU / 16 GiB, $5.55/day). On the `c3-standard-8` this was
-previously deployed to ($10.58/day), `synthetic_loop` ran **9.7 s — inside budget** and three of
-four clips passed. Halving the cores to halve the cost is what moved it over; that is a
-deployment-economics choice on a demo box rather than an engine limitation.
+Measured on the deployed `c3-standard-8` (8 vCPU / 32 GiB), one job at a time.
 
 Run-to-run spread is under 1 %, so this is stable and reproducible, not a cold-start artefact or
 a noisy neighbour. Every clip returns a pose for all 300 frames.

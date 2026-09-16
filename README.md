@@ -61,7 +61,7 @@ Everything the brief asked for, where it lives, and how to check it in about a m
 | 4 | **Approach to minimise accumulated pose error and drift** | Parallax gating, longest-baseline-first triangulation, robust costs, windowed local BA with fixed anchors, BoW place recognition, Sim(3) verification, Sim(3) PGO, acceptance guards with rollback — [`slam/loop.py`](slam/loop.py), [`slam/mapping.py`](slam/mapping.py) | **[`docs/03-drift-mitigation.md`](docs/03-drift-mitigation.md)** — every mechanism with before/after numbers, plus the two experiments that *failed*. `make bench` regenerates [`bench/results.json`](bench/results.json) |
 | 5 | **Visualisation of the sparse 3D cloud and camera trajectory** | [`frontend/src/components/viewer/`](frontend/src/components/viewer/) — one `THREE.Points` for the cloud, `LineSegments` for trajectory, frusta and loop arcs, `frameloop="demand"` | Open the live URL → run a sample → orbit. [`docs/05-frontend.md`](docs/05-frontend.md). `make -C frontend test` drives it headless and asserts on **rendered pixels** |
 | 6 | **10-second video in ≤10 seconds** | Threaded decode/ORB, struct-of-arrays map, analytic BA Jacobian, capped LSMR inner solve, one job at a time | **[`docs/06-performance.md`](docs/06-performance.md)**. **Met on the dev machine** (2.76–4.76 s engine, 1.85–3.63× realtime). **On the public deployment, both 10-second clips land inside the budget** — `synthetic_corridor` **7.0–7.6 s**, `synthetic_loop` **9.7 s**. The real handheld clip runs at **13.8 s**, where 151 frames of motion blur drive 49 keyframes and BA runs once per keyframe; closing that is a costed instance upgrade rather than an open question. Every clip is reported, not just the favourable ones: see [below](#measured-performance) and [`docs/07-limitations.md §9`](docs/07-limitations.md#9-the-10-s-budget-holds-on-the-10-second-clips-the-real-handheld-clip-needs-more-machine) |
-| 7 | **Public deployment with a URL** | **https://slam-34-47-153-95.nip.io** — GCE `c3-standard-4`, Caddy terminating Let's Encrypt TLS, `/api/*` reverse-proxied to the API. Scripts: [`../infra/`](../infra/README.md) | `curl -sSI https://slam-34-47-153-95.nip.io` → `HTTP/2 200`, and `curl -s https://slam-34-47-153-95.nip.io/api/v1/health` |
+| 7 | **Public deployment with a URL** | **https://slam-34-47-153-95.nip.io** — GCE `c3-standard-8`, Caddy terminating Let's Encrypt TLS, `/api/*` reverse-proxied to the API. Scripts: [`../infra/`](../infra/README.md) | `curl -sSI https://slam-34-47-153-95.nip.io` → `HTTP/2 200`, and `curl -s https://slam-34-47-153-95.nip.io/api/v1/health` |
 | — | **README with setup + deploy instructions** | This file ([Quickstart](#quickstart)), plus [`../infra/README.md`](../infra/README.md) for the public deployment runbook | |
 | — | **Architecture and major technical decisions** | [Architecture in 60 seconds](#architecture-in-60-seconds) below; in depth in [`docs/01-architecture.md`](docs/01-architecture.md); seven ADRs in [`docs/adr/`](docs/adr/) | |
 | — | **Libraries, frameworks, pretrained models** | [Components](#components) below. **No pretrained model is used** | |
@@ -79,7 +79,7 @@ artefacts, and a SLAM engine that is a plain library with no knowledge of HTTP.
 flowchart LR
     B["Browser<br/>Next.js 15 · SSE · WebGL"]
 
-    subgraph VM["GCE c3-standard-4 · Ubuntu 24.04 · asia-south1-b"]
+    subgraph VM["GCE c3-standard-8 · Ubuntu 24.04 · asia-south1-b"]
         C["Caddy 2<br/>TLS · reverse proxy"]
         W["slam-web<br/>Next.js standalone"]
         A["slam-api<br/>FastAPI · uvicorn"]
@@ -292,16 +292,16 @@ subsample), median of 3:
 | `synthetic_corridor` | **2831 ms** | 3.53× | 29 ms |
 | `desk_handheld_tum` | **5402 ms** | 1.85× | 18 ms |
 
-**Deployment host — measured against the live URL. Two of the four bundled clips meet the 10 s
-budget, including a real-world one.** GCE `c3-standard-4`, Xeon Platinum 8481C @ 2.70 GHz,
-**4 vCPU / 16 GiB**, one job at a time, `SLAM_BACKEND=real`:
+**Deployment host — measured against the live URL. Three of the four bundled clips meet the
+10 s budget, including a real-world one.** GCE `c3-standard-8`, Xeon Platinum 8481C @ 2.70 GHz,
+**8 vCPU / 32 GiB**, one job at a time, `SLAM_BACKEND=real`:
 
 | clip | `wall_ms` | ×realtime | poses | closures | drift reduction | |
 |---|---|---|---|---|---|---|
-| `office_handheld` (TUM fr3, real) | **9 645 ms** | 1.04× | 297/300 | 0 | n/a | inside budget |
-| `synthetic_corridor` | **7 841 ms** | 1.28× | 288/300 | 0 (no revisit) | n/a | inside budget |
-| `synthetic_loop` | **11 293 ms** | 0.89× | 231/300 | 1 | **89.5 %** | 13 % over |
-| `desk_handheld` (TUM fr1, real) | **15 205 ms** | 0.66× | 294/300 | 2 | **99.8 %** | 52 % over |
+| `synthetic_corridor` | **6 583 / 6 758 ms** | 1.48–1.52× | 288/300 | 0 (no revisit) | n/a | inside budget |
+| `office_handheld` (TUM fr3, real) | **6 788 / 7 881 ms** | 1.27–1.47× | 297/300 | 0 | n/a | inside budget |
+| `synthetic_loop` | **9 588 / 9 772 ms** | 1.02–1.04× | 231/300 | 1 | **89.5 %** | inside budget |
+| `desk_handheld` (TUM fr1, real) | **13 873 / 14 132 ms** | 0.71–0.72× | 294/300 | 2 | **99.8 %** | 39 % over |
 
 Run-to-run spread is under 1 %, so this is stable rather than a cold start, and every clip
 returns a pose for all 300 frames — none of the timing is bought by dropping frames. The
@@ -429,7 +429,7 @@ is missing, the library falls back to a deterministic random (LSH-style) vocabul
 |---|---|
 | Docker + Compose | Both stacks |
 | Caddy 2 | Let's Encrypt TLS, reverse proxy, SSE-safe `flush_interval -1` |
-| GCE `c3-standard-4` | Xeon Platinum 8481C @ 2.70 GHz, 4 vCPU, 16 GiB, Ubuntu 24.04, `asia-south1-b` — sized down from `c3-standard-8` to halve running cost; see [docs/06](docs/06-performance.md#the-host-is-deliberately-sized-down) |
+| GCE `c3-standard-8` | Xeon Platinum 8481C @ 2.70 GHz, 8 vCPU, 32 GiB, Ubuntu 24.04, `asia-south1-b` |
 | nip.io | Public DNS for a bare IP, no domain registration |
 
 **Sample data.** Two synthetic clips with exact ground truth, rendered by
@@ -500,14 +500,12 @@ Start at [`docs/README.md`](docs/README.md) for a 60-second tour.
 The full, uncomfortable list is [`docs/07-limitations.md`](docs/07-limitations.md). The six
 that would matter most:
 
-0. **The 10 s budget holds on both 10-second clips; the real handheld clip runs at 13.8 s.**
-   7.0–7.6 s and 9.7 s against the target, and **13.8 s** for `desk_handheld_tum`. Measured on
-   the live deployment, reproducible, sub-1 % spread. The cause is understood: 151 frames of
-   motion blur drive the keyframe policy to 49 keyframes where clean motion needs 24–30, and BA
-   runs once per keyframe. Closing it is a **cost decision, not an open question** — a
-   higher-clock instance gets there with no code or accuracy change, at ~25–30 % more per day on
-   a VM that already runs continuously for both assignments. Deferred deliberately rather than
-   bought.
+0. **Three of four clips hold the 10 s budget; `desk_handheld` runs at 13.9 s.** Measured on
+   the live deployment and reproducible. The cause is understood: 151 frames of motion blur
+   drive the keyframe policy to 49 keyframes where clean motion needs 19–30, and bundle
+   adjustment runs once per keyframe. Those keyframes are not waste — that clip produces the
+   best drift result in the set. The real fix is a motion-aware keyframe policy that weighs
+   what each keyframe is worth, not a constant.
    [Details](docs/07-limitations.md#9-the-10-s-budget-holds-on-the-10-second-clips-the-real-handheld-clip-needs-more-machine).
 1. **On the real handheld clip, 144 of 300 frames are not tracked** — one contiguous
    150-frame blackout starting at frame 88, caused by a pan peaking at **7.63°/frame**
